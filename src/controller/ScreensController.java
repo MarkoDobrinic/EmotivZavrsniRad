@@ -75,6 +75,7 @@ public class ScreensController extends StackPane {
                 //no one else been displayed, then just show
                 setOpacity(0.0);
                 getChildren().add(screens.get(name));
+
                 Timeline fadeIn = new Timeline(new KeyFrame(Duration.ZERO,
                         new KeyValue(opacity, 0.0)),
                         new KeyFrame(new Duration(2500),

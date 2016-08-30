@@ -23,7 +23,7 @@ import java.util.ResourceBundle;
 
 public class LoginController implements Initializable, ControlledScreen {
 
-    private EmotivMusicApp mainApp;
+
     private ScreensController myController;
 
     @FXML
@@ -53,6 +53,9 @@ public class LoginController implements Initializable, ControlledScreen {
 //            } catch (IOException e) {
 //                e.printStackTrace();
 //            }
+
+            EmotivMusicApp.mainApp.primaryStage.setMinHeight(600);
+            EmotivMusicApp.mainApp.primaryStage.setMinWidth(800);
             myController.setScreen(EmotivMusicApp.screen3ID);
         } else {
             lblMessage.setText("Username or password invalid!");

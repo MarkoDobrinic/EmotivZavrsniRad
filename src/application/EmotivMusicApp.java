@@ -17,6 +17,7 @@ public class EmotivMusicApp extends Application {
     public Stage primaryStage;
     private AnchorPane rootLayout;
     //public MainController childMainScreen;
+    public static EmotivMusicApp mainApp;
 
     public static String screen1ID = "main";
     public static String screen1File = "../view/Main.fxml";
@@ -27,9 +28,9 @@ public class EmotivMusicApp extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-
-//        this.primaryStage = primaryStage;
-//        this.primaryStage.setTitle("Emotiv EEG");
+        this.mainApp = this;
+        this.primaryStage = primaryStage;
+        this.primaryStage.setTitle("Emotiv EEG");
 //
 //        initRootLayout();
 //        showUserScene();
@@ -38,16 +39,20 @@ public class EmotivMusicApp extends Application {
         //mainContainer.loadScreen(EmotivMusicApp.screen1ID, EmotivMusicApp.screen1File);
         mainContainer.loadScreen(EmotivMusicApp.screen2ID, EmotivMusicApp.screen2File);
         mainContainer.loadScreen(EmotivMusicApp.screen3ID, EmotivMusicApp.screen3File);
-
         mainContainer.setScreen(EmotivMusicApp.screen2ID);
 
         Group root = new Group();
         root.getChildren().addAll(mainContainer);
+        root.setAutoSizeChildren(true);
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
         primaryStage.show();
 
+        // prepareData();
+
     }
+
+
 
 //    public void showCalibrationScene() {
 //        try {
@@ -96,6 +101,7 @@ public class EmotivMusicApp extends Application {
 //    }
 
     public static void main(String[] args) {
+
         launch(args);
     }
 

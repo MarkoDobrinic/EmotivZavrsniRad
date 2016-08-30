@@ -2,8 +2,12 @@ package controller;
 
 import application.EmotivMusicApp;
 import com.sun.jna.ptr.DoubleByReference;
+import com.sun.org.apache.xml.internal.resolver.helpers.Debug;
+import com.sun.org.apache.xpath.internal.operations.Number;
 import controller.maincontroller.ControlledScreen;
+import javafx.animation.AnimationTimer;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.concurrent.Service;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -13,7 +17,15 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import javafx.stage.Stage;
 import model.EmotivData;
+import thread.DataCallback;
+import thread.DeviceReader;
+
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 
 /**
  * Created by RedShift on 26.8.2016..
@@ -40,7 +52,14 @@ public class BaselineController extends EmotivMusicApp implements ControlledScre
 
     public NumberAxis xAxisLine = new NumberAxis();
     public NumberAxis yAxisLine = new NumberAxis();
-    public XYChart.Series series = new XYChart.Series();
+    public XYChart.Series<Integer, Double> seriesAlpha = new XYChart.Series<>();
+    public XYChart.Series<Integer, Double> seriesBetaLow = new XYChart.Series<>();
+    public XYChart.Series<Integer, Double> seriesBetaHigh = new XYChart.Series<>();
+    public XYChart.Series<Integer, Double> seriesGamma = new XYChart.Series<>();
+    public XYChart.Series<Integer, Double> seriesTheta = new XYChart.Series<>();
+
+
+
 
     public double threshold, barChartValue, baseline = 0, divider = 1, timePlaying = 0;
 
@@ -48,7 +67,7 @@ public class BaselineController extends EmotivMusicApp implements ControlledScre
     public Label lblTimeCounter;
 
     @FXML
-    public LineChart<String, Number> chartBaseline;
+    public LineChart<Integer, Double> chartBaseline;
 
     @FXML
     public Button btnMainRestart, btnMainStart;
@@ -56,6 +75,72 @@ public class BaselineController extends EmotivMusicApp implements ControlledScre
 
     @FXML
     public ChoiceBox choiceBoxDifficulty;
+
+
+    @FXML
+    public void onBtnMainStart(ActionEvent event) {
+        //TODO - method that fills line chart dynamically with random numbers
+//        XYChart.Series<String, Integer> series = new XYChart.Series<String, Integer>();
+//        series.getData().addAll(new XYChart.Data<String, Integer>("Jan", 250));
+//        series.getData().addAll(new XYChart.Data<String, Integer>("Feb", 123));
+//        series.getData().addAll(new XYChart.Data<String, Integer>("Mar", 441));
+        //series.getData().addAll(new XYChart.Data<Integer, Double>(120, 2.23));
+
+        chartBaseline.setCreateSymbols(false);
+        chartBaseline.setTitle("Derp");
+        seriesAlpha.setName("Alpha");
+        chartBaseline.getData().add(seriesAlpha);
+
+        seriesBetaHigh.setName("Beta High");
+        chartBaseline.getData().add(seriesBetaHigh);
+
+        seriesBetaLow.setName("Beta Low");
+        chartBaseline.getData().add(seriesBetaLow);
+
+        seriesGamma.setName("Gamma");
+        chartBaseline.getData().add(seriesGamma);
+
+        seriesTheta.setName("Theta");
+        chartBaseline.getData().add(seriesTheta);
+
+        //TODO - pokretanje threada za dinamične podatke
+        DeviceReader deviceReader = new DeviceReader();
+        deviceReader.setCallback(data -> {
+            System.out.println("data received..." + data);
+            Platform.runLater(() -> {
+                        seriesAlpha.getData().add(new XYChart.Data<>(data.getTime(), data.getAlpha()));
+                        seriesBetaLow.getData().add(new XYChart.Data<>(data.getTime(), 2+data.getBeta_low()));
+                        seriesBetaHigh.getData().add(new XYChart.Data<>(data.getTime(), 4+data.getBeta_high()));
+                        seriesTheta.getData().add(new XYChart.Data<>(data.getTime(), 6+data.getTheta()));
+                        seriesGamma.getData().add(new XYChart.Data<>(data.getTime(), 8+data.getGamma()));
+                    }
+            );
+        });
+        new Thread(deviceReader).start();
+    }
+
+
+    @FXML
+    public void onBtnMainReset(ActionEvent event) {
+        try {
+            chartBaseline.getData().clear();
+        } catch (NullPointerException npe) {
+            System.out.println("lineChart=" + chartBaseline);
+            System.out.println("lineChart.getData()=" + chartBaseline.getData());
+            throw npe;
+        }
+    }
+
+//
+//    public void init(MainController mainController) {
+//        main = mainController;
+//    }
+
+    @Override
+    public void setScreenParent(ScreensController screenParent) {
+        myController = screenParent;
+    }
+}
 
 //    @FXML
 //    public void initialize(){
@@ -204,36 +289,3 @@ public class BaselineController extends EmotivMusicApp implements ControlledScre
 //
 //        return theta/lowBeta;
 //    }
-
-    @FXML
-    public void onBtnMainStart(ActionEvent event) {
-        //TODO - method that fills line chart dynamically with random numbers
-        XYChart.Series<String, Number> series = new XYChart.Series<String, Number>();
-        series.getData().addAll(new XYChart.Data<String, Number>("Jan", 250));
-        series.getData().addAll(new XYChart.Data<String, Number>("Feb", 123));
-        series.getData().addAll(new XYChart.Data<String, Number>("Mar", 441));
-        series.getData().addAll(new XYChart.Data<String, Number>("Apr", 665));
-        chartBaseline.getData().add(series);
-    }
-
-    @FXML
-    public void onBtnMainReset(ActionEvent event) {
-        try {
-            chartBaseline.getData().clear();
-        } catch (NullPointerException npe) {
-            System.out.println("lineChart=" + chartBaseline);
-            System.out.println("lineChart.getData()=" + chartBaseline.getData());
-            throw npe;
-        }
-    }
-
-//
-//    public void init(MainController mainController) {
-//        main = mainController;
-//    }
-
-    @Override
-    public void setScreenParent(ScreensController screenParent) {
-        myController = screenParent;
-    }
-}

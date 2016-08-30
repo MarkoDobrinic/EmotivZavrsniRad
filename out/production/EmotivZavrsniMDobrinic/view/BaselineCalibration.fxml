@@ -9,17 +9,18 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="634.0" prefWidth="868.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.BaselineController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="634.0" minWidth="868.0" prefHeight="634.0" prefWidth="868.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.BaselineController">
    <children>
       <Label fx:id="lblBaseline1" layoutX="75.0" layoutY="37.0" prefHeight="38.0" prefWidth="218.0" text="Baseline calibration" />
       <Button fx:id="btnMainStart" layoutX="499.0" layoutY="554.0" mnemonicParsing="false" onAction="#onBtnMainStart" prefHeight="38.0" prefWidth="126.0" text="Start" />
       <Button fx:id="btnMainReset" layoutX="632.0" layoutY="554.0" mnemonicParsing="false" onAction="#onBtnMainReset" prefHeight="38.0" prefWidth="126.0" text="Reset" />
       <LineChart fx:id="chartBaseline" layoutX="41.0" layoutY="89.0" prefHeight="412.0" prefWidth="717.0">
-        <xAxis>
-          <CategoryAxis side="BOTTOM" />
+
+          <xAxis>
+          <NumberAxis side="BOTTOM"  autoRanging="false" lowerBound="0" upperBound="120"/>
         </xAxis>
         <yAxis>
-          <NumberAxis side="LEFT" />
+          <NumberAxis side="LEFT" upperBound="10" autoRanging="false" lowerBound="0" tickUnit="0.1"/>
         </yAxis>
       </LineChart>
       <Label alignment="CENTER" layoutX="75.0" layoutY="554.0" prefHeight="38.0" prefWidth="51.0" text="Timer:" />
