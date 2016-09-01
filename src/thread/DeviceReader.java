@@ -3,6 +3,7 @@ package thread;
 import model.EmotivData;
 
 import java.util.Random;
+import java.util.logging.Logger;
 
 /**
  * Created by RedShift on 30.8.2016..
@@ -10,20 +11,25 @@ import java.util.Random;
 public class DeviceReader implements Runnable{
 
     private DataCallback callback;
+    private volatile boolean running = true;
+
+    public void terminate(){
+        this.running = false;
+    }
 
     @Override
     public void run() {
         if (callback == null) {
             throw new IllegalArgumentException("Callback not set!");
         }
-        for (int i = 0; i < 120; i++) {
-
+        this.running = true;
+        for (int i = 0; i < 120 && this.running;  i++) {
             callback.onData(getRandom(i));
-
             try {
                 Thread.sleep(200);
             } catch (InterruptedException e) {
                 e.printStackTrace();
+                this.running = false;
             }
         }
         //TODO

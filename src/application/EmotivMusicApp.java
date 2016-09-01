@@ -49,7 +49,6 @@ public class EmotivMusicApp extends Application {
         primaryStage.show();
 
         // prepareData();
-
     }
 
 

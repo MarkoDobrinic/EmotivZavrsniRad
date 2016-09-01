@@ -20,7 +20,6 @@ public class EmotivData {
     private Double beta_high;
     private Double gamma;
     private Double theta;
-
     private Integer time;
 
     public Double getAlpha() {

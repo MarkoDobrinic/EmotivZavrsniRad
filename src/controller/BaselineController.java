@@ -58,7 +58,11 @@ public class BaselineController extends EmotivMusicApp implements ControlledScre
     public XYChart.Series<Integer, Double> seriesGamma = new XYChart.Series<>();
     public XYChart.Series<Integer, Double> seriesTheta = new XYChart.Series<>();
 
-
+    /**
+     * Thread variables
+     * */
+    private Thread thread = null;
+    private DeviceReader deviceReader = new DeviceReader();
 
 
     public double threshold, barChartValue, baseline = 0, divider = 1, timePlaying = 0;
@@ -104,7 +108,7 @@ public class BaselineController extends EmotivMusicApp implements ControlledScre
         chartBaseline.getData().add(seriesTheta);
 
         //TODO - pokretanje threada za dinamične podatke
-        DeviceReader deviceReader = new DeviceReader();
+
         deviceReader.setCallback(data -> {
             System.out.println("data received..." + data);
             Platform.runLater(() -> {
@@ -116,12 +120,16 @@ public class BaselineController extends EmotivMusicApp implements ControlledScre
                     }
             );
         });
-        new Thread(deviceReader).start();
+        Thread thread = new Thread(deviceReader);
+        thread.start();
     }
 
 
     @FXML
     public void onBtnMainReset(ActionEvent event) {
+
+        this.deviceReader.terminate();
+
         try {
             chartBaseline.getData().clear();
         } catch (NullPointerException npe) {
