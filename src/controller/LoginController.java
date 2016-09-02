@@ -92,11 +92,11 @@ public class LoginController implements Initializable, ControlledScreen {
             System.out.println("Opened DB connection...");
             statement = connection.createStatement();
 
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM " + Constants.Database.TABLE_NAME + " WHERE USERNAME= " + "'" + tfUsername.getText() + "'"
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM " + Constants.Database.TNAME_USER + " WHERE USERNAME= " + "'" + tfUsername.getText() + "'"
                     + " AND PASSWORD= " + "'" + tfPassword.getText() + "'");
 
             while (resultSet.next()){
-                if (resultSet.getString(Constants.Database.USERNAME) != null && resultSet.getString(Constants.Database.PASSWORD) != null) {
+                if (resultSet.getString(Constants.Database.User.USERNAME) != null && resultSet.getString(Constants.Database.User.PASSWORD) != null) {
                     String  username = resultSet.getString("USERNAME");
                     System.out.println( "USERNAME = " + username );
                     String password = resultSet.getString("PASSWORD");

@@ -1,12 +1,10 @@
 package thread;
 
-import Iedk.Edk;
-import Iedk.EdkErrorCode;
-import controller.BaselineController;
+import device.Device;
+import device.DeviceBridgeMock;
 import model.EmotivData;
 
 import java.util.Random;
-import java.util.logging.Logger;
 
 /**
  * Created by RedShift on 30.8.2016..
@@ -14,7 +12,7 @@ import java.util.logging.Logger;
 public class DeviceReader implements Runnable{
 
     private DataCallback callback;
-    private EmotivData emoData = new EmotivData();
+    private Device device = new DeviceBridgeMock();
     private volatile boolean running = true;
 
     public void terminate(){
@@ -28,7 +26,7 @@ public class DeviceReader implements Runnable{
         }
         this.running = true;
         for (int i = 0; i < 120 && this.running;  i++) {
-            callback.onData(getRandom(i));
+            callback.onData(device.readData(i));
             try {
                 Thread.sleep(0);
             } catch (InterruptedException e) {
@@ -48,35 +46,4 @@ public class DeviceReader implements Runnable{
 
     }
 
-
-    public EmotivData getRandom(int time){
-
-        Random random = new Random();
-        double randomAlpha = 0.1 + (2 - 0.1) * random.nextDouble();
-        double randomBetaHigh = 0.1 + (2 - 0.1) * random.nextDouble();
-        double randomBetaLow = 0.1 + (2 - 0.1) * random.nextDouble();
-        double randomGamma = 0.1 + (2 - 0.1) * random.nextDouble();
-        double randomTheta = 0.1 + (2 - 0.1) * random.nextDouble();
-
-
-        EmotivData emotivData = new EmotivData();
-
-//        double baseBetaHigh =+ emotivData.getAlphaBase();
-//        double baseBetaLow =+ emotivData.getAlphaBase();
-//        double baseTheta =+ emotivData.getAlphaBase();
-//        double baseGamma =+ emotivData.getAlphaBase();
-
-        emotivData.setAlpha(randomAlpha);
-        emotivData.setBeta_high(randomBetaHigh);
-        emotivData.setBeta_low(randomBetaLow);
-        emotivData.setGamma(randomGamma);
-        emotivData.setTheta(randomTheta);
-
-        //emotivData.alphaBase = randomAlpha;
-
-        emotivData.setTime(time);
-        //TODO
-
-        return emotivData;
-    }
 }

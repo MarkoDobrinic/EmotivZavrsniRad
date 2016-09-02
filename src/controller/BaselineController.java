@@ -1,12 +1,11 @@
 package controller;
 
 import application.EmotivMusicApp;
+import com.sun.jna.IntegerType;
 import com.sun.jna.ptr.DoubleByReference;
-import com.sun.org.apache.xml.internal.resolver.helpers.Debug;
-import com.sun.org.apache.xpath.internal.operations.Number;
 import controller.maincontroller.ControlledScreen;
 import helper.Constants;
-import javafx.animation.AnimationTimer;
+import helper.WindowHelper;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.concurrent.Service;
@@ -16,17 +15,13 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
-import javafx.stage.Stage;
 import model.EmotivData;
-import thread.DataCallback;
 import thread.DeviceReader;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
 
 /**
  * Created by RedShift on 26.8.2016..
@@ -64,6 +59,7 @@ public class BaselineController extends EmotivMusicApp implements ControlledScre
      * */
     private Thread thread = null;
     private DeviceReader deviceReader = new DeviceReader();
+    private List<EmotivData> allReadings = new ArrayList<>();
 
     public double threshold, barChartValue, baseline = 0, divider = 1, timePlaying = 0;
 
@@ -84,28 +80,12 @@ public class BaselineController extends EmotivMusicApp implements ControlledScre
     @FXML
     public void onBtnBase(ActionEvent event){
 
-        System.out.println("alphaBase: " + emotivData.alphaBase);
-        System.out.println("alpha final: "+ emotivData.alphaBase/240);
-        String query = "UPDATE emotivuser SET alphaB=" + emotivData.alphaBase/240 + ", " +
-                        "betalowB=" + emotivData.betalowBase/240 + ", " +
-                        "betahighB=" + emotivData.betahighBase/240 + ", " +
-                        "gammaB=" + emotivData.gammaBase/240 + ", " +
-                        "thetaB=" + emotivData.thetaBase/240 + ";" +
-                        "WHERE username="+ "'"+ "test" + "';" ;
-
-        try(Connection connection = this.connect();
-            PreparedStatement stmnt = connection.prepareStatement(query)){
-            System.out.println("Opened DB connection...");
-            stmnt.executeUpdate();
-        } catch (SQLException e) {
-            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-        }
 
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirmation Dialog");
-        alert.setHeaderText("Look, a Confirmation Dialog");
-        alert.setContentText("Save user data and proceed to the next screen?");
+        alert.setHeaderText("Do you want to save data?");
+        alert.setContentText("Proceed");
 
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK){
@@ -114,6 +94,7 @@ public class BaselineController extends EmotivMusicApp implements ControlledScre
             try {
                 EmotivMusicApp.mainApp.primaryStage.setMinHeight(1030);
                 EmotivMusicApp.mainApp.primaryStage.setMinWidth(1520);
+                WindowHelper.centerWindow();
                 myController.setScreen(EmotivMusicApp.screenMainID);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -152,20 +133,27 @@ public class BaselineController extends EmotivMusicApp implements ControlledScre
 
         //TODO - pokretanje threada za dinamične podatke
 
+        //čistimo listu prije novog ubacivanja
+        allReadings.clear();
+
         deviceReader.setCallback(data -> {
             System.out.println("data received..." + data);
+
+            allReadings.addAll(data);
+
+            Integer time = data.get(0).getTime();
+            Double avgAlpha = data.stream().mapToDouble(x -> x.getAlpha()).summaryStatistics().getAverage();
+            Double avgBetaLow = data.stream().mapToDouble(x -> x.getBetaLow()).summaryStatistics().getAverage();
+            Double avgBetaHigh = data.stream().mapToDouble(x -> x.getBetaHigh()).summaryStatistics().getAverage();
+            Double avgGamma = data.stream().mapToDouble(x -> x.getGamma()).summaryStatistics().getAverage();
+            Double avgTheta = data.stream().mapToDouble(x -> x.getTheta()).summaryStatistics().getAverage();
+
             Platform.runLater(() -> {
-                        seriesAlpha.getData().add(new XYChart.Data<>(data.getTime(), data.getAlpha()));
-                        seriesBetaLow.getData().add(new XYChart.Data<>(data.getTime(), 2+data.getBeta_low()));
-                        seriesBetaHigh.getData().add(new XYChart.Data<>(data.getTime(), 4+data.getBeta_high()));
-                        seriesTheta.getData().add(new XYChart.Data<>(data.getTime(), 6+data.getTheta()));
-                        seriesGamma.getData().add(new XYChart.Data<>(data.getTime(), 8+data.getGamma()));
-                        emotivData.alphaBase += data.getAlpha();
-                        emotivData.betahighBase += data.getBeta_high();
-                        emotivData.betalowBase += data.getBeta_low();
-                        emotivData.gammaBase += data.getGamma();
-                        emotivData.thetaBase += data.getTheta();
-                        System.out.println("alphaBase: " + emotivData.alphaBase);
+                        seriesAlpha.getData().add(new XYChart.Data<>(time, avgAlpha));
+                        seriesBetaLow.getData().add(new XYChart.Data<>(time, 2+avgBetaLow));
+                        seriesBetaHigh.getData().add(new XYChart.Data<>(time, 4+avgBetaHigh));
+                        seriesTheta.getData().add(new XYChart.Data<>(time, 6+avgGamma));
+                        seriesGamma.getData().add(new XYChart.Data<>(time, 8+avgTheta));
                     }
             );
 
