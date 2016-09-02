@@ -8,6 +8,7 @@ import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -16,15 +17,16 @@ public class EmotivMusicApp extends Application {
 
     public Stage primaryStage;
     private AnchorPane rootLayout;
-    //public MainController childMainScreen;
+    //public MainScreenController childMainScreen;
     public static EmotivMusicApp mainApp;
+    private MediaPlayer mediaPlayer;
 
-    public static String screen1ID = "main";
-    public static String screen1File = "../view/Main.fxml";
     public static String screen2ID = "screen2";
     public static String screen2File = "../view/UserInfo.fxml";
     public static String screen3ID = "screen3";
     public static String screen3File = "../view/BaselineCalibration.fxml";
+    public static String screenMainID = "screenMain";
+    public static String screenMainFile = "../view/MainScreen.fxml";
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -39,6 +41,8 @@ public class EmotivMusicApp extends Application {
         //mainContainer.loadScreen(EmotivMusicApp.screen1ID, EmotivMusicApp.screen1File);
         mainContainer.loadScreen(EmotivMusicApp.screen2ID, EmotivMusicApp.screen2File);
         mainContainer.loadScreen(EmotivMusicApp.screen3ID, EmotivMusicApp.screen3File);
+        mainContainer.loadScreen(EmotivMusicApp.screenMainID, EmotivMusicApp.screenMainFile);
+
         mainContainer.setScreen(EmotivMusicApp.screen2ID);
 
         Group root = new Group();

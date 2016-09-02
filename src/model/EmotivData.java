@@ -18,9 +18,16 @@ public class EmotivData {
     private Double alpha;
     private Double beta_low;
     private Double beta_high;
-    private Double gamma;
+    private Double gamma ;
     private Double theta;
     private Integer time;
+
+    public Double alphaBase = 0.0;
+    public Double  betalowBase = 0.0;
+    public Double betahighBase = 0.0;
+    public Double gammaBase = 0.0;
+    public Double thetaBase = 0.0;
+
 
     public Double getAlpha() {
         return alpha;
@@ -70,12 +77,59 @@ public class EmotivData {
         this.time = time;
     }
 
+    public Double getAlphaBase() {
+        return alphaBase;
+    }
+
+    public void setAlphaBase(Double alphaBase) {
+        this.alphaBase = alphaBase;
+    }
+
+    public Double getBetalowBase() {
+        return betalowBase;
+    }
+
+    public void setBetalowBase(Double betalowBase) {
+        this.betalowBase = betalowBase;
+    }
+
+    public Double getBetahighBase() {
+        return betahighBase;
+    }
+
+    public void setBetahighBase(Double betahighBase) {
+        this.betahighBase = betahighBase;
+    }
+
+    public Double getGammaBase() {
+        return gammaBase;
+    }
+
+    public void setGammaBase(Double gammaBase) {
+        this.gammaBase = gammaBase;
+    }
+
+    public Double getThetaBase() {
+        return thetaBase;
+    }
+
+    public void setThetaBase(Double thetaBase) {
+        this.thetaBase = thetaBase;
+    }
+
     @Override
     public String toString() {
         return "EmotivData{" +
                 "alpha=" + alpha +
                 ", time=" + time +
+                ", alphaBase=" + alphaBase +
                 '}';
+    }
+
+    public void calculateBaseline(double alpha, double betaH, double betaL, double gamma, double theta){
+
+
+
     }
 }
 

@@ -5,6 +5,7 @@ import com.sun.jna.ptr.DoubleByReference;
 import com.sun.org.apache.xml.internal.resolver.helpers.Debug;
 import com.sun.org.apache.xpath.internal.operations.Number;
 import controller.maincontroller.ControlledScreen;
+import helper.Constants;
 import javafx.animation.AnimationTimer;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -14,14 +15,14 @@ import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 import model.EmotivData;
 import thread.DataCallback;
 import thread.DeviceReader;
 
+import java.sql.*;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -32,7 +33,7 @@ import java.util.concurrent.ThreadFactory;
  */
 public class BaselineController extends EmotivMusicApp implements ControlledScreen {
 
-    //private MainController main;
+    //private MainScreenController main;
     public static EmotivData emotivData = new EmotivData();
     private ScreensController myController;
 
@@ -64,7 +65,6 @@ public class BaselineController extends EmotivMusicApp implements ControlledScre
     private Thread thread = null;
     private DeviceReader deviceReader = new DeviceReader();
 
-
     public double threshold, barChartValue, baseline = 0, divider = 1, timePlaying = 0;
 
     @FXML
@@ -74,11 +74,54 @@ public class BaselineController extends EmotivMusicApp implements ControlledScre
     public LineChart<Integer, Double> chartBaseline;
 
     @FXML
-    public Button btnMainRestart, btnMainStart;
+    public Button btnMainRestart, btnMainStart, btnBase;
 
 
     @FXML
     public ChoiceBox choiceBoxDifficulty;
+
+
+    @FXML
+    public void onBtnBase(ActionEvent event){
+
+        System.out.println("alphaBase: " + emotivData.alphaBase);
+        System.out.println("alpha final: "+ emotivData.alphaBase/240);
+        String query = "UPDATE emotivuser SET alphaB=" + emotivData.alphaBase/240 + ", " +
+                        "betalowB=" + emotivData.betalowBase/240 + ", " +
+                        "betahighB=" + emotivData.betahighBase/240 + ", " +
+                        "gammaB=" + emotivData.gammaBase/240 + ", " +
+                        "thetaB=" + emotivData.thetaBase/240 + ";" +
+                        "WHERE username="+ "'"+ "test" + "';" ;
+
+        try(Connection connection = this.connect();
+            PreparedStatement stmnt = connection.prepareStatement(query)){
+            System.out.println("Opened DB connection...");
+            stmnt.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+        }
+
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation Dialog");
+        alert.setHeaderText("Look, a Confirmation Dialog");
+        alert.setContentText("Save user data and proceed to the next screen?");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK){
+
+            myController.unloadScreen(EmotivMusicApp.screen3ID);
+            try {
+                EmotivMusicApp.mainApp.primaryStage.setMinHeight(1030);
+                EmotivMusicApp.mainApp.primaryStage.setMinWidth(1520);
+                myController.setScreen(EmotivMusicApp.screenMainID);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+
+        }
+    }
 
 
     @FXML
@@ -117,8 +160,15 @@ public class BaselineController extends EmotivMusicApp implements ControlledScre
                         seriesBetaHigh.getData().add(new XYChart.Data<>(data.getTime(), 4+data.getBeta_high()));
                         seriesTheta.getData().add(new XYChart.Data<>(data.getTime(), 6+data.getTheta()));
                         seriesGamma.getData().add(new XYChart.Data<>(data.getTime(), 8+data.getGamma()));
+                        emotivData.alphaBase += data.getAlpha();
+                        emotivData.betahighBase += data.getBeta_high();
+                        emotivData.betalowBase += data.getBeta_low();
+                        emotivData.gammaBase += data.getGamma();
+                        emotivData.thetaBase += data.getTheta();
+                        System.out.println("alphaBase: " + emotivData.alphaBase);
                     }
             );
+
         });
         Thread thread = new Thread(deviceReader);
         thread.start();
@@ -140,7 +190,7 @@ public class BaselineController extends EmotivMusicApp implements ControlledScre
     }
 
 //
-//    public void init(MainController mainController) {
+//    public void init(MainScreenController mainController) {
 //        main = mainController;
 //    }
 
@@ -148,7 +198,30 @@ public class BaselineController extends EmotivMusicApp implements ControlledScre
     public void setScreenParent(ScreensController screenParent) {
         myController = screenParent;
     }
+
+
+    public void SetBaselineValues(){
+        EmotivData data = new EmotivData();
+
+        data.alphaBase = data.getAlphaBase()/240;
+        System.out.println("alpha Baseline final: " + data.alphaBase);
+    }
+
+    private Connection connect() {
+        // SQLite connection string
+        String url = "jdbc:sqlite:"+ Constants.Database.DB_NAME;
+        Connection conn = null;
+        try {
+            conn = DriverManager.getConnection(url);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return conn;
+    }
+
 }
+
+
 
 //    @FXML
 //    public void initialize(){

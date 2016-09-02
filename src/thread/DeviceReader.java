@@ -1,5 +1,8 @@
 package thread;
 
+import Iedk.Edk;
+import Iedk.EdkErrorCode;
+import controller.BaselineController;
 import model.EmotivData;
 
 import java.util.Random;
@@ -11,6 +14,7 @@ import java.util.logging.Logger;
 public class DeviceReader implements Runnable{
 
     private DataCallback callback;
+    private EmotivData emoData = new EmotivData();
     private volatile boolean running = true;
 
     public void terminate(){
@@ -26,7 +30,7 @@ public class DeviceReader implements Runnable{
         for (int i = 0; i < 120 && this.running;  i++) {
             callback.onData(getRandom(i));
             try {
-                Thread.sleep(200);
+                Thread.sleep(0);
             } catch (InterruptedException e) {
                 e.printStackTrace();
                 this.running = false;
@@ -35,9 +39,15 @@ public class DeviceReader implements Runnable{
         //TODO
     }
 
+
     public void setCallback(DataCallback callback) {
         this.callback = callback;
     }
+
+    public void readDeviceState(){
+
+    }
+
 
     public EmotivData getRandom(int time){
 
@@ -48,13 +58,21 @@ public class DeviceReader implements Runnable{
         double randomGamma = 0.1 + (2 - 0.1) * random.nextDouble();
         double randomTheta = 0.1 + (2 - 0.1) * random.nextDouble();
 
+
         EmotivData emotivData = new EmotivData();
+
+//        double baseBetaHigh =+ emotivData.getAlphaBase();
+//        double baseBetaLow =+ emotivData.getAlphaBase();
+//        double baseTheta =+ emotivData.getAlphaBase();
+//        double baseGamma =+ emotivData.getAlphaBase();
 
         emotivData.setAlpha(randomAlpha);
         emotivData.setBeta_high(randomBetaHigh);
         emotivData.setBeta_low(randomBetaLow);
         emotivData.setGamma(randomGamma);
         emotivData.setTheta(randomTheta);
+
+        //emotivData.alphaBase = randomAlpha;
 
         emotivData.setTime(time);
         //TODO

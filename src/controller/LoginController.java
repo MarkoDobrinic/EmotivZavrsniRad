@@ -35,10 +35,10 @@ public class LoginController implements Initializable, ControlledScreen {
     private Label lblMessage;
 
     @FXML
-    private TextField tfUsername;
+    public TextField tfUsername;
 
     @FXML
-    private PasswordField tfPassword;
+    public PasswordField tfPassword;
 
     @FXML
     private Button btnLogin;
@@ -117,9 +117,8 @@ public class LoginController implements Initializable, ControlledScreen {
         return enableLogin;
     }
 
-
 //
-//    public void init(MainController mainController) {
+//    public void init(MainScreenController mainController) {
 //        main = mainController;
 //    }
 }
