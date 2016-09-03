@@ -14,13 +14,11 @@ import javafx.scene.layout.*;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.util.Duration;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.control.Button;
+
 /**
  * Created by RedShift on 2.9.2016..
  */
-public class MediaControl extends BorderPane{
+public class MediaControl extends BorderPane {
 
     private MediaPlayer mp;
     private MediaView mediaView;
@@ -38,7 +36,8 @@ public class MediaControl extends BorderPane{
         this.mp = mp;
         setStyle("-fx-background-color: #bfc2c7;");
         mediaView = new MediaView(mp);
-        Pane mvPane = new Pane() {                };
+        Pane mvPane = new Pane() {
+        };
         mvPane.getChildren().add(mediaView);
         mvPane.setStyle("-fx-background-color: black;");
         setCenter(mvPane);
@@ -73,8 +72,7 @@ public class MediaControl extends BorderPane{
             }
         });
 
-        mp.currentTimeProperty().addListener(new InvalidationListener()
-        {
+        mp.currentTimeProperty().addListener(new InvalidationListener() {
             public void invalidated(Observable ov) {
                 updateValues();
             }
@@ -185,7 +183,7 @@ public class MediaControl extends BorderPane{
                                 * 100.0);
                     }
                     if (!volumeSlider.isValueChanging()) {
-                        volumeSlider.setValue((int)Math.round(mp.getVolume()
+                        volumeSlider.setValue((int) Math.round(mp.getVolume()
                                 * 100));
                     }
                 }
@@ -194,7 +192,7 @@ public class MediaControl extends BorderPane{
     }
 
     private static String formatTime(Duration elapsed, Duration duration) {
-        int intElapsed = (int)Math.floor(elapsed.toSeconds());
+        int intElapsed = (int) Math.floor(elapsed.toSeconds());
         int elapsedHours = intElapsed / (60 * 60);
         if (elapsedHours > 0) {
             intElapsed -= elapsedHours * 60 * 60;
@@ -204,7 +202,7 @@ public class MediaControl extends BorderPane{
                 - elapsedMinutes * 60;
 
         if (duration.greaterThan(Duration.ZERO)) {
-            int intDuration = (int)Math.floor(duration.toSeconds());
+            int intDuration = (int) Math.floor(duration.toSeconds());
             int durationHours = intDuration / (60 * 60);
             if (durationHours > 0) {
                 intDuration -= durationHours * 60 * 60;
@@ -218,7 +216,7 @@ public class MediaControl extends BorderPane{
                         durationHours, durationMinutes, durationSeconds);
             } else {
                 return String.format("%02d:%02d/%02d:%02d",
-                        elapsedMinutes, elapsedSeconds,durationMinutes,
+                        elapsedMinutes, elapsedSeconds, durationMinutes,
                         durationSeconds);
             }
         } else {
@@ -226,7 +224,7 @@ public class MediaControl extends BorderPane{
                 return String.format("%d:%02d:%02d", elapsedHours,
                         elapsedMinutes, elapsedSeconds);
             } else {
-                return String.format("%02d:%02d",elapsedMinutes,
+                return String.format("%02d:%02d", elapsedMinutes,
                         elapsedSeconds);
             }
         }

@@ -2,24 +2,22 @@ package application;
 
 
 import controller.ScreensController;
+import dao.EmotivDao;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
-
-import java.io.IOException;
+import model.EmotivContext;
 
 public class EmotivMusicApp extends Application {
 
     public Stage primaryStage;
     private AnchorPane rootLayout;
     //public MainScreenController childMainScreen;
-    public static EmotivMusicApp mainApp;
     private MediaPlayer mediaPlayer;
+
 
     public static String screen2ID = "screen2";
     public static String screen2File = "../view/UserInfo.fxml";
@@ -27,10 +25,14 @@ public class EmotivMusicApp extends Application {
     public static String screen3File = "../view/BaselineCalibration.fxml";
     public static String screenMainID = "screenMain";
     public static String screenMainFile = "../view/MainScreen.fxml";
+    public static String spinnerID = "spinner";
+    public static String spinnerFile = "../view/Spinner.fxml";
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        this.mainApp = this;
+
+        EmotivContext.APP = this;
+        EmotivContext.DAO = new EmotivDao();
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("Emotiv EEG");
 //
@@ -39,9 +41,11 @@ public class EmotivMusicApp extends Application {
 
         ScreensController mainContainer = new ScreensController();
         //mainContainer.loadScreen(EmotivMusicApp.screen1ID, EmotivMusicApp.screen1File);
+        mainContainer.loadScreen(EmotivMusicApp.spinnerID, EmotivMusicApp.spinnerFile);
         mainContainer.loadScreen(EmotivMusicApp.screen2ID, EmotivMusicApp.screen2File);
         mainContainer.loadScreen(EmotivMusicApp.screen3ID, EmotivMusicApp.screen3File);
         mainContainer.loadScreen(EmotivMusicApp.screenMainID, EmotivMusicApp.screenMainFile);
+
 
         mainContainer.setScreen(EmotivMusicApp.screen2ID);
 
@@ -55,53 +59,6 @@ public class EmotivMusicApp extends Application {
         // prepareData();
     }
 
-
-
-//    public void showCalibrationScene() {
-//        try {
-//            Scene scene2 = new FXMLLoader().load(getClass().getResource("../view/BaselineCalibration.fxml"));
-//            primaryStage.setScene(scene2);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//    private void showUserScene(){
-//        try {
-//            Parent root = FXMLLoader.load(getClass().getResource("../view/UserInfo.fxml"));
-//            Scene scene = new Scene(root);
-//            primaryStage.setScene(scene);
-//            primaryStage.show();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//    private void initRootLayout() {
-//        try {
-//            Parent root = FXMLLoader.load(getClass().getResource("../view/UserInfo.fxml"));
-//            Scene scene = new Scene(root);
-//            primaryStage.setScene(scene);
-//            primaryStage.show();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
-
-//    private Parent replaceSceneContent(String fxml) throws Exception {
-//        Parent page = (Parent) FXMLLoader.load(App.class.getResource(fxml), null, new JavaFXBuilderFactory());
-//        Scene scene = stage.getScene();
-//        if (scene == null) {
-//            scene = new Scene(page, 700, 450);
-//            scene.getStylesheets().add(App.class.getResource("demo.css").toExternalForm());
-//            stage.setScene(scene);
-//        } else {
-//            stage.getScene().setRoot(page);
-//        }
-//        stage.sizeToScene();
-//        return page;
-//    }
 
     public static void main(String[] args) {
 

@@ -1,84 +1,89 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ButtonBar?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.shape.Circle?>
-
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="937.0" prefWidth="1378.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="EmotivStatusController">
-   <top>
-      <MenuBar BorderPane.alignment="CENTER">
-        <menus>
-          <Menu mnemonicParsing="false" text="File">
-            <items>
-              <MenuItem mnemonicParsing="false" text="Close" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Edit">
-            <items>
-              <MenuItem mnemonicParsing="false" text="Delete" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Help">
-            <items>
-              <MenuItem mnemonicParsing="false" text="About" />
-            </items>
-          </Menu>
-        </menus>
-      </MenuBar>
-   </top>
-   <center>
-      <AnchorPane prefHeight="905.0" prefWidth="914.0" BorderPane.alignment="CENTER">
-         <children>
-            <ImageView fitHeight="579.0" fitWidth="495.0" layoutX="161.0" layoutY="147.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../../documents/resources/EmotivEpocSignal.jpg" />
-               </image></ImageView>
-            <Circle fx:id="dotF4" layoutX="453.0" layoutY="323.0" radius="24.0" stroke="BLACK" strokeType="INSIDE" />
-            <Circle fx:id="dotT7" layoutX="209.0" layoutY="442.0" radius="24.0" stroke="BLACK" strokeType="INSIDE" />
-            <Circle fx:id="dotFC5" layoutX="274.0" layoutY="384.0" radius="24.0" stroke="BLACK" strokeType="INSIDE" />
-            <Circle fx:id="dotF3" layoutX="353.0" layoutY="323.0" radius="24.0" stroke="BLACK" strokeType="INSIDE" />
-            <Circle fx:id="dotF7" layoutX="233.0" layoutY="336.0" radius="24.0" stroke="BLACK" strokeType="INSIDE" />
-            <Circle fx:id="dotAF4" layoutX="509.0" layoutY="261.0" radius="24.0" stroke="BLACK" strokeType="INSIDE" />
-            <Circle fx:id="dotP7" layoutX="281.0" layoutY="593.0" radius="24.0" stroke="BLACK" strokeType="INSIDE" />
-            <Circle fx:id="dotO2" layoutX="469.0" layoutY="665.0" radius="24.0" stroke="BLACK" strokeType="INSIDE" />
-            <Circle fx:id="dotFC6" layoutX="540.0" layoutY="384.0" radius="24.0" stroke="BLACK" strokeType="INSIDE" />
-            <Circle fx:id="dotF8" layoutX="580.0" layoutY="336.0" radius="24.0" stroke="BLACK" strokeType="INSIDE" />
-            <Circle fx:id="dotT8" layoutX="604.0" layoutY="442.0" radius="24.0" stroke="BLACK" strokeType="INSIDE" />
-            <Circle fx:id="dotO1" layoutX="346.0" layoutY="665.0" radius="24.0" stroke="BLACK" strokeType="INSIDE" />
-            <Circle fx:id="dotP8" layoutX="526.0" layoutY="593.0" radius="24.0" stroke="BLACK" strokeType="INSIDE" />
-            <Circle fx:id="dotAF3" layoutX="305.0" layoutY="261.0" radius="24.0" stroke="BLACK" strokeType="INSIDE" />
-         </children>
-      </AnchorPane>
-   </center>
-   <left>
-      <Pane prefHeight="905.0" prefWidth="562.0" BorderPane.alignment="CENTER">
-         <children>
-            <ImageView fx:id="imgBattery" fitHeight="150.0" fitWidth="200.0" layoutX="249.0" layoutY="140.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../../documents/resources/battery1.png" />
-               </image></ImageView>
-            <ImageView fx:id="imgSignal" fitHeight="109.0" fitWidth="153.0" layoutX="206.0" layoutY="421.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../../documents/resources/wireless3.png" />
-               </image></ImageView>
-            <Label alignment="CENTER" layoutX="1.0" layoutY="77.0" prefHeight="21.0" prefWidth="561.0" text="Battery status:" />
-            <Label alignment="CENTER" layoutX="-1.0" layoutY="350.0" prefHeight="21.0" prefWidth="564.0" text="Signal status:" />
-            <ButtonBar layoutX="144.0" layoutY="607.0" prefHeight="69.0" prefWidth="275.0">
-              <buttons>
-                <Button mnemonicParsing="false" prefHeight="38.0" prefWidth="193.0" text="Reconnect" />
-                  <Button mnemonicParsing="false" prefHeight="38.0" text="Refresh" />
-              </buttons>
-            </ButtonBar>
-         </children>
-      </Pane>
-   </left>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="937.0"
+            prefWidth="1378.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controller.TestAnalyticsController">
+    <top>
+        <MenuBar BorderPane.alignment="CENTER">
+            <menus>
+                <Menu mnemonicParsing="false" text="File">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="Close"/>
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Edit">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="Delete"/>
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Help">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="About"/>
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+    </top>
+    <center>
+        <AnchorPane prefHeight="905.0" prefWidth="914.0" BorderPane.alignment="CENTER">
+            <children>
+                <ImageView fitHeight="579.0" fitWidth="495.0" layoutX="161.0" layoutY="147.0" pickOnBounds="true"
+                           preserveRatio="true">
+                    <image>
+                        <Image url="@../documents/resources/EmotivEpocSignal.jpg"/>
+                    </image>
+                </ImageView>
+                <Circle fx:id="dotF4" layoutX="453.0" layoutY="323.0" radius="24.0" stroke="BLACK" strokeType="INSIDE"/>
+                <Circle fx:id="dotT7" layoutX="209.0" layoutY="442.0" radius="24.0" stroke="BLACK" strokeType="INSIDE"/>
+                <Circle fx:id="dotFC5" layoutX="274.0" layoutY="384.0" radius="24.0" stroke="BLACK"
+                        strokeType="INSIDE"/>
+                <Circle fx:id="dotF3" layoutX="353.0" layoutY="323.0" radius="24.0" stroke="BLACK" strokeType="INSIDE"/>
+                <Circle fx:id="dotF7" layoutX="233.0" layoutY="336.0" radius="24.0" stroke="BLACK" strokeType="INSIDE"/>
+                <Circle fx:id="dotAF4" layoutX="509.0" layoutY="261.0" radius="24.0" stroke="BLACK"
+                        strokeType="INSIDE"/>
+                <Circle fx:id="dotP7" layoutX="281.0" layoutY="593.0" radius="24.0" stroke="BLACK" strokeType="INSIDE"/>
+                <Circle fx:id="dotO2" layoutX="469.0" layoutY="665.0" radius="24.0" stroke="BLACK" strokeType="INSIDE"/>
+                <Circle fx:id="dotFC6" layoutX="540.0" layoutY="384.0" radius="24.0" stroke="BLACK"
+                        strokeType="INSIDE"/>
+                <Circle fx:id="dotF8" layoutX="580.0" layoutY="336.0" radius="24.0" stroke="BLACK" strokeType="INSIDE"/>
+                <Circle fx:id="dotT8" layoutX="604.0" layoutY="442.0" radius="24.0" stroke="BLACK" strokeType="INSIDE"/>
+                <Circle fx:id="dotO1" layoutX="346.0" layoutY="665.0" radius="24.0" stroke="BLACK" strokeType="INSIDE"/>
+                <Circle fx:id="dotP8" layoutX="526.0" layoutY="593.0" radius="24.0" stroke="BLACK" strokeType="INSIDE"/>
+                <Circle fx:id="dotAF3" layoutX="305.0" layoutY="261.0" radius="24.0" stroke="BLACK"
+                        strokeType="INSIDE"/>
+            </children>
+        </AnchorPane>
+    </center>
+    <left>
+        <Pane prefHeight="905.0" prefWidth="562.0" BorderPane.alignment="CENTER">
+            <children>
+                <ImageView fx:id="imgBattery" fitHeight="150.0" fitWidth="200.0" layoutX="249.0" layoutY="140.0"
+                           pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@../documents/resources/battery1.png"/>
+                    </image>
+                </ImageView>
+                <ImageView fx:id="imgSignal" fitHeight="109.0" fitWidth="153.0" layoutX="206.0" layoutY="421.0"
+                           pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@../documents/resources/wireless3.png"/>
+                    </image>
+                </ImageView>
+                <Label alignment="CENTER" layoutX="1.0" layoutY="77.0" prefHeight="21.0" prefWidth="561.0"
+                       text="Battery status:"/>
+                <Label alignment="CENTER" layoutX="-1.0" layoutY="350.0" prefHeight="21.0" prefWidth="564.0"
+                       text="Signal status:"/>
+                <ButtonBar layoutX="144.0" layoutY="607.0" prefHeight="69.0" prefWidth="275.0">
+                    <buttons>
+                        <Button mnemonicParsing="false" prefHeight="38.0" prefWidth="193.0" text="Reconnect"/>
+                        <Button mnemonicParsing="false" prefHeight="38.0" text="Refresh"/>
+                    </buttons>
+                </ButtonBar>
+            </children>
+        </Pane>
+    </left>
 </BorderPane>

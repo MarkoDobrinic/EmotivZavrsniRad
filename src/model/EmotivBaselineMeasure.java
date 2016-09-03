@@ -1,18 +1,25 @@
 package model;
 
 /**
- * Created by MDobrinic on 26.8.2016..
+ * Created by RedShift on 3.9.2016..
  */
-public class EmotivData {
+public class EmotivBaselineMeasure {
 
+    private int baselineId;
+    private int nodeId;
     private Double alpha;
     private Double betaLow;
     private Double betaHigh;
     private Double gamma;
     private Double theta;
-    private Integer time;
 
-    private int nodeId;
+    public int getBaselineId() {
+        return baselineId;
+    }
+
+    public void setBaselineId(int baselineId) {
+        this.baselineId = baselineId;
+    }
 
     public int getNodeId() {
         return nodeId;
@@ -62,23 +69,16 @@ public class EmotivData {
         this.theta = theta;
     }
 
-    public Integer getTime() {
-        return time;
-    }
-
-    public void setTime(Integer time) {
-        this.time = time;
-    }
-
-
     @Override
     public String toString() {
-        return "EmotivData{" +
-                "alpha=" + alpha +
-                ", time=" + time +
+        return "EmotivBaselineMeasure{" +
+                "baselineId=" + baselineId +
+                ", nodeId=" + nodeId +
+                ", alpha=" + alpha +
+                ", betaLow=" + betaLow +
+                ", betaHigh=" + betaHigh +
+                ", gamma=" + gamma +
+                ", theta=" + theta +
                 '}';
     }
-
 }
-
-

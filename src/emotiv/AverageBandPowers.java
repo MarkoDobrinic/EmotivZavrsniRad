@@ -1,88 +1,94 @@
 /****************************************************************************
-**
-** Copyright 2015 by Emotiv. All rights reserved
-** Example - AverageBandPowers
-** The average band power for a specific channel from the latest epoch with
-** 0.5 seconds step size and 2 seconds window size
-** This example is used for single connection.
-**
-****************************************************************************/
+ **
+ ** Copyright 2015 by Emotiv. All rights reserved
+ ** Example - AverageBandPowers
+ ** The average band power for a specific channel from the latest epoch with
+ ** 0.5 seconds step size and 2 seconds window size
+ ** This example is used for single connection.
+ **
+ ****************************************************************************/
 
 package emotiv;
 
+import Iedk.Edk;
+import Iedk.EdkErrorCode;
 import com.sun.jna.Pointer;
-import com.sun.jna.ptr.*;
-import Iedk.*;
+import com.sun.jna.ptr.DoubleByReference;
+import com.sun.jna.ptr.IntByReference;
 
 public class AverageBandPowers {
-	public static void main(String[] args) {
-		Pointer eEvent = Edk.INSTANCE.IEE_EmoEngineEventCreate();
-		Pointer eState = Edk.INSTANCE.IEE_EmoStateCreate();
-				
-		IntByReference userID = null;
-		boolean ready = false;
-		int state = 0;
-		
-		Edk.IEE_DataChannels_t dataChannel;
-		
-		userID = new IntByReference(0);
+    public static void main(String[] args) {
+        Pointer eEvent = Edk.INSTANCE.IEE_EmoEngineEventCreate();
+        Pointer eState = Edk.INSTANCE.IEE_EmoStateCreate();
 
-		if (Edk.INSTANCE.IEE_EngineConnect("Emotiv Systems-5") != EdkErrorCode.EDK_OK
-				.ToInt()) {
-			System.out.println("Emotiv Engine start up failed.");
-			return;
-		}
+        IntByReference userID = null;
+        boolean ready = false;
+        int state = 0;
 
-		System.out.println("Start receiving Data!");
-		System.out.println("Theta, Alpha, Low_beta, High_beta, Gamma");
+        Edk.IEE_DataChannels_t dataChannel;
 
-		while (true) {
-			state = Edk.INSTANCE.IEE_EngineGetNextEvent(eEvent);
+        userID = new IntByReference(0);
 
-			// New event needs to be handled
-			if (state == EdkErrorCode.EDK_OK.ToInt()) {
-				int eventType = Edk.INSTANCE.IEE_EmoEngineEventGetType(eEvent);
-				Edk.INSTANCE.IEE_EmoEngineEventGetUserId(eEvent, userID);
+        if (Edk.INSTANCE.IEE_EngineConnect("Emotiv Systems-5") != EdkErrorCode.EDK_OK
+                .ToInt()) {
+            System.out.println("Emotiv Engine start up failed.");
+            return;
+        }
 
-				// Log the EmoState if it has been updated
-				if (eventType == Edk.IEE_Event_t.IEE_UserAdded.ToInt())
-					if (userID != null) {
-						System.out.println("User added");
-						ready = true;
-					}
-			} else if (state != EdkErrorCode.EDK_NO_EVENT.ToInt()) {
-				System.out.println("Internal error in Emotiv Engine!");
-				break;
-			}
+        System.out.println("Start receiving Data!");
+        System.out.println("Theta, Alpha, Low_beta, High_beta, Gamma");
 
-			if (ready) {
-				
-				DoubleByReference alpha     = new DoubleByReference(0);
-				DoubleByReference low_beta  = new DoubleByReference(0);
-				DoubleByReference high_beta = new DoubleByReference(0);
-				DoubleByReference gamma     = new DoubleByReference(0);
-				DoubleByReference theta     = new DoubleByReference(0);
-				
+        while (true) {
+            state = Edk.INSTANCE.IEE_EngineGetNextEvent(eEvent);
 
-	            for(int i = 3 ; i < 17 ; i++)
-	            {
-	                int result = Edk.INSTANCE.IEE_GetAverageBandPowers(userID.getValue(), i, theta, alpha, low_beta, high_beta, gamma);
-	                if(result == EdkErrorCode.EDK_OK.ToInt()){
-	                	System.out.print(theta.getValue()); System.out.print(", ");
-	                	System.out.print(alpha.getValue()); System.out.print(", ");
-	                	System.out.print(low_beta.getValue()); System.out.print(", ");
-	                	System.out.print(high_beta.getValue()); System.out.print(", ");
-	                	System.out.print(gamma.getValue()); System.out.print(", ");	                	
-	                }
-	                
-	                System.out.println();
-	            }	            	           
-			}
-		}
+            // New event needs to be handled
+            if (state == EdkErrorCode.EDK_OK.ToInt()) {
+                int eventType = Edk.INSTANCE.IEE_EmoEngineEventGetType(eEvent);
+                Edk.INSTANCE.IEE_EmoEngineEventGetUserId(eEvent, userID);
 
-		Edk.INSTANCE.IEE_EngineDisconnect();
-		Edk.INSTANCE.IEE_EmoStateFree(eState);
-		Edk.INSTANCE.IEE_EmoEngineEventFree(eEvent);
-		System.out.println("Disconnected!");
-	}
+                // Log the EmoState if it has been updated
+                if (eventType == Edk.IEE_Event_t.IEE_UserAdded.ToInt())
+                    if (userID != null) {
+                        System.out.println("User added");
+                        ready = true;
+                    }
+            } else if (state != EdkErrorCode.EDK_NO_EVENT.ToInt()) {
+                System.out.println("Internal error in Emotiv Engine!");
+                break;
+            }
+
+            if (ready) {
+
+                DoubleByReference alpha = new DoubleByReference(0);
+                DoubleByReference low_beta = new DoubleByReference(0);
+                DoubleByReference high_beta = new DoubleByReference(0);
+                DoubleByReference gamma = new DoubleByReference(0);
+                DoubleByReference theta = new DoubleByReference(0);
+
+
+                for (int i = 3; i < 17; i++) {
+                    int result = Edk.INSTANCE.IEE_GetAverageBandPowers(userID.getValue(), i, theta, alpha, low_beta, high_beta, gamma);
+                    if (result == EdkErrorCode.EDK_OK.ToInt()) {
+                        System.out.print(theta.getValue());
+                        System.out.print(", ");
+                        System.out.print(alpha.getValue());
+                        System.out.print(", ");
+                        System.out.print(low_beta.getValue());
+                        System.out.print(", ");
+                        System.out.print(high_beta.getValue());
+                        System.out.print(", ");
+                        System.out.print(gamma.getValue());
+                        System.out.print(", ");
+                    }
+
+                    System.out.println();
+                }
+            }
+        }
+
+        Edk.INSTANCE.IEE_EngineDisconnect();
+        Edk.INSTANCE.IEE_EmoStateFree(eState);
+        Edk.INSTANCE.IEE_EmoEngineEventFree(eEvent);
+        System.out.println("Disconnected!");
+    }
 }

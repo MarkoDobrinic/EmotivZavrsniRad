@@ -10,7 +10,7 @@ import java.util.List;
  */
 
 //real implementation
-public class DeviceBridge implements Device{
+public class DeviceServiceImpl implements DeviceService {
     @Override
     public EmotivData readNodeData(int nodeId, int time) {
         throw new NotImplementedException();
@@ -18,6 +18,6 @@ public class DeviceBridge implements Device{
 
     @Override
     public List<EmotivData> readData(int time) {
-        return null;
+        throw new NotImplementedException();
     }
 }
