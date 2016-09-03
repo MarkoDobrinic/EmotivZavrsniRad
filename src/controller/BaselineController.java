@@ -91,13 +91,6 @@ public class BaselineController extends EmotivMusicApp implements ControlledScre
                 }
             };
             dbInsertThread.start();
-
-            myController.unloadScreen(EmotivMusicApp.screen2ID);
-            myController.setScreen(EmotivMusicApp.spinnerID);
-            EmotivContext.APP.primaryStage.setWidth(289);
-            EmotivContext.APP.primaryStage.setHeight(130);
-            WindowHelper.centerWindow();
-
             dbInsertThread.setOnSucceeded(event1 -> {
                 try {
                     EmotivContext.APP.primaryStage.setMinHeight(1030);

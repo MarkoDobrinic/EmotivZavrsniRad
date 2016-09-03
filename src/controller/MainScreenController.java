@@ -1,27 +1,31 @@
 package controller;
 
+import application.EmotivMusicApp;
 import controller.maincontroller.ControlledScreen;
+import helper.WindowHelper;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
-import model.EmotivBaselineMeasure;
-import model.EmotivContext;
-import model.EmotivData;
+import model.*;
 import service.MediaPlayerService;
 import thread.DeviceReader;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by RedShift on 28.8.2016..
@@ -35,6 +39,12 @@ public class MainScreenController extends Window implements ControlledScreen {
     private MediaPlayerService mediaPlayerService;
     private DeviceReader deviceReader = new DeviceReader();
     private BaselineController baseline;
+    private EmotivBaseline emotivBaseline;
+    private EmotivData emotivData;
+    private EmotivTest emotivTest;
+    private EmotivTestMeasure emotivTestMeasure;
+    private Service<Void> dbTestInsertData;
+    private List<EmotivData> mainReadings = new ArrayList<>();
 
     public XYChart.Series<Integer, Double> seriesAlphaBase = new XYChart.Series<>();
     public XYChart.Series<Integer, Double> seriesBetaLowBase = new XYChart.Series<>();
@@ -48,18 +58,26 @@ public class MainScreenController extends Window implements ControlledScreen {
     public XYChart.Series<Integer, Double> mainGamma = new XYChart.Series<>();
     public XYChart.Series<Integer, Double> mainTheta = new XYChart.Series<>();
 
+
     @Override
     public void setScreenParent(ScreensController screenParent) {
         myController = screenParent;
     }
 
     @FXML
+    private TextField tfArtist;
+
+    @FXML
+    private TextArea txtDescription;
+
+    @FXML
     private ChoiceBox<String> cbGenre;
+
     @FXML
     private ChoiceBox cbTest;
 
     @FXML
-    private Button btnOpenFile;
+    private Button btnOpenFile, btnSaveSongInfo;
 
     @FXML
     public Button btnPlayerStart, btnPlayerStop;
@@ -70,6 +88,46 @@ public class MainScreenController extends Window implements ControlledScreen {
     @FXML
     private void onBtnSaveTest(ActionEvent event) {
 
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle(" ");
+        alert.setHeaderText("Do you want to save this test data?");
+        alert.setContentText("Proceed");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK) {
+
+            dbTestInsertData = new Service<Void>() {
+                @Override
+                protected Task<Void> createTask() {
+                    return new Task<Void>() {
+                        @Override
+                        protected Void call() throws Exception {
+
+                            emotivTest.setBaselineId(EmotivContext.BASELINE.getId());
+                            emotivTest = EmotivContext.DAO.saveTest(emotivTest);
+                            emotivTestMeasure.setBaselineId(EmotivContext.BASELINE.getId());
+                            EmotivContext.DAO.saveTestReading(mainReadings, emotivTest, EmotivContext.BASELINE );
+                            // myController.unloadScreen(EmotivMusicApp.screen3ID);
+                            return null;
+                        }
+                    };
+                }
+            };
+            dbTestInsertData.start();
+
+            dbTestInsertData.setOnSucceeded(event1 -> {
+                try {
+                    EmotivContext.APP.primaryStage.setMinHeight(1030);
+                    EmotivContext.APP.primaryStage.setMinWidth(1520);
+                    WindowHelper.centerWindow();
+                    myController.setScreen(EmotivMusicApp.screenMainID);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+        } else {
+            //TODO
+        }
     }
 
     @FXML
@@ -88,6 +146,14 @@ public class MainScreenController extends Window implements ControlledScreen {
     @FXML
     private void onBtnSaveSongInfo(ActionEvent event) {
 
+        try {
+            emotivTest.setGenre(cbGenre.getValue());
+            emotivTest.setArtist(tfArtist.getText());
+            emotivTest.setDescription(txtDescription.getText());
+            emotivTest.setSongname(mediaPlayerService.getSongName());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -137,6 +203,10 @@ public class MainScreenController extends Window implements ControlledScreen {
     public void init() {
         initializeGuiElements();
         mediaPlayerService = new MediaPlayerService();
+        emotivTest = new EmotivTest();
+        emotivTestMeasure = new EmotivTestMeasure();
+        emotivData = new EmotivData();
+        emotivBaseline = new EmotivBaseline();
     }
 
     private void initializeGuiElements() {
@@ -183,11 +253,11 @@ public class MainScreenController extends Window implements ControlledScreen {
         //allReadings.clear();
 
         deviceReader.setReadLength(mediaPlayerService.getSongDuration().intValue());
-        deviceReader.setThreadSleep(1000);
+        deviceReader.setThreadSleep(0);
         deviceReader.setCallback(data -> {
 
             System.out.println("data received..." + data);
-            //allReadings.addAll(data);
+            mainReadings.addAll(data);
 
             Integer time = data.get(0).getTime();
             Double avgAlpha = data.stream().mapToDouble(EmotivData::getAlpha).summaryStatistics().getAverage();

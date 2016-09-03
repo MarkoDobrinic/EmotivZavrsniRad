@@ -25,8 +25,8 @@ public class EmotivMusicApp extends Application {
     public static String screen3File = "../view/BaselineCalibration.fxml";
     public static String screenMainID = "screenMain";
     public static String screenMainFile = "../view/MainScreen.fxml";
-    public static String spinnerID = "spinner";
-    public static String spinnerFile = "../view/Spinner.fxml";
+//    public static String spinnerID = "spinner";
+//    public static String spinnerFile = "../view/Spinner.fxml";
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -41,7 +41,6 @@ public class EmotivMusicApp extends Application {
 
         ScreensController mainContainer = new ScreensController();
         //mainContainer.loadScreen(EmotivMusicApp.screen1ID, EmotivMusicApp.screen1File);
-        mainContainer.loadScreen(EmotivMusicApp.spinnerID, EmotivMusicApp.spinnerFile);
         mainContainer.loadScreen(EmotivMusicApp.screen2ID, EmotivMusicApp.screen2File);
         mainContainer.loadScreen(EmotivMusicApp.screen3ID, EmotivMusicApp.screen3File);
         mainContainer.loadScreen(EmotivMusicApp.screenMainID, EmotivMusicApp.screenMainFile);

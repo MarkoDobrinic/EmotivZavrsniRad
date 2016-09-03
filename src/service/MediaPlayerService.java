@@ -14,6 +14,8 @@ public class MediaPlayerService extends Service<Void> {
     private Media pick;
     private String songPath;
     public double songDuration;
+    private String songName;
+    private int stringPosition;
 
     @Override
     protected Task<Void> createTask() {
@@ -59,6 +61,8 @@ public class MediaPlayerService extends Service<Void> {
             @Override
             public void run() {
                 songDuration = pick.getDuration().toSeconds();
+                stringPosition = pick.getSource().lastIndexOf('/');
+                songName = pick.getSource().substring(stringPosition);
                 System.out.println("duration" + pick.getDuration().toSeconds());
             }
         });
@@ -69,5 +73,12 @@ public class MediaPlayerService extends Service<Void> {
             return songDuration;
         }
         return 0.0;
+    }
+
+    public String getSongName(){
+        if (player != null) {
+             return songName;
+        }
+        return "";
     }
 }

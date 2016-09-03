@@ -80,6 +80,8 @@ public class Constants {
             public static final String INSERT_TEST = "INSERT INTO TEST (" +
                     BASELINE_ID + ", " + DESCRIPTION + ", " + GENRE + ", " + SONGNAME +
                     ", " + ARTIST + " )" + "VALUES (?,?,?,?,?)";
+
+            public static final String FIND_TEST_BY_BASELINE= "SELECT * FROM TEST WHERE " + BASELINE_ID + "= ?;";
         }
 
         public class TestMeasure {

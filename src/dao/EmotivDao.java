@@ -1,10 +1,7 @@
 package dao;
 
 import helper.Constants;
-import model.EmotivBaseline;
-import model.EmotivBaselineMeasure;
-import model.EmotivData;
-import model.EmotivUser;
+import model.*;
 
 import java.sql.*;
 import java.util.List;
@@ -46,11 +43,38 @@ public class EmotivDao {
         return baseline;
     }
 
+    public EmotivTest findTestByBaseline(EmotivBaseline baseline) {
+
+        PreparedStatement prepare = prepare(Constants.Database.Test.FIND_TEST_BY_BASELINE, baseline.getId());
+        EmotivTest test = new EmotivTest();
+
+        try {
+            ResultSet resultSet = prepare.executeQuery();
+            test.setId(resultSet.getInt(Constants.Database.Test.ID));
+            test.setBaselineId(resultSet.getInt(Constants.Database.Test.BASELINE_ID));
+            test.setDescription(resultSet.getString(Constants.Database.Test.DESCRIPTION));
+            test.setGenre(resultSet.getString(Constants.Database.Test.GENRE));
+            test.setSongname(resultSet.getString(Constants.Database.Test.SONGNAME));
+            test.setArtist(resultSet.getString(Constants.Database.Test.ARTIST));
+            getConnection().commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return test;
+    }
+
     public void saveBaselineReading(List<EmotivData> allReadings, EmotivBaseline baseline) {
-        for (EmotivData reading : allReadings) {
-            saveBaselineReading(reading, baseline);
+        try {
+            getConnection().setAutoCommit(false);
+            for (EmotivData reading : allReadings) {
+                saveBaselineReading(reading, baseline);
+            }
+            getConnection().commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
+
 
     public void saveBaselineReading(EmotivData emotivData, EmotivBaseline baseline) {
 
@@ -59,7 +83,6 @@ public class EmotivDao {
                 emotivData.getBetaHigh(), emotivData.getGamma(), emotivData.getTheta());
         try {
             prepare.execute();
-            getConnection().commit();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -79,6 +102,49 @@ public class EmotivDao {
         EmotivUser user = new EmotivUser();
         user.setId(baseline.getUserId());
         return findBaselineByUser(user);
+    }
+
+    public EmotivTest saveTest(EmotivTest test) {
+
+        PreparedStatement prepare = prepare(Constants.Database.Test.INSERT_TEST, test.getBaselineId(),
+                test.getDescription(), test.getGenre(), test.getSongname(), test.getArtist());
+        try {
+            prepare.execute();
+            getConnection().commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        EmotivBaseline baseline = new EmotivBaseline();
+        baseline.setId(test.getBaselineId());
+        return findTestByBaseline(baseline);
+
+    }
+
+    public void saveTestReading(EmotivTest test, EmotivData emotivData, EmotivBaseline baseline) {
+
+        PreparedStatement prepare = prepare(Constants.Database.TestMeasure.INSERT_TEST_MEASURE,
+                baseline.getId(), emotivData.getNodeId(), test.getId(), emotivData.getAlpha(), emotivData.getBetaLow(),
+                emotivData.getBetaHigh(), emotivData.getGamma(), emotivData.getTheta());
+        try {
+            prepare.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void saveTestReading(List<EmotivData> mainReadings, EmotivTest test, EmotivBaseline baseline) {
+        try {
+            getConnection().setAutoCommit(false);
+
+            for (EmotivData reading : mainReadings) {
+                saveTestReading(test, reading, baseline);
+            }
+            getConnection().commit();
+            getConnection().setAutoCommit(true);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public EmotivBaselineMeasure getAverageMeasure(EmotivBaseline baseline) {
@@ -102,6 +168,7 @@ public class EmotivDao {
 
         return baselineMeasure;
     }
+
 
     public Connection getConnection() {
         if (connection == null) {
