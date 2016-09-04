@@ -83,7 +83,7 @@ public class BaselineController extends EmotivMusicApp implements ControlledScre
                             baseline = EmotivContext.DAO.saveBasline(baseline);
                             EmotivContext.DAO.saveBaselineReading(allReadings, baseline);
                             EmotivContext.BASELINE = baseline;
-                            // myController.unloadScreen(EmotivMusicApp.screen3ID);
+                            // myController.unloadScreen(EmotivMusicApp.screenBaselineID);
 
                             return null;
                         }

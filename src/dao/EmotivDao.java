@@ -4,6 +4,7 @@ import helper.Constants;
 import model.*;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -61,6 +62,33 @@ public class EmotivDao {
             e.printStackTrace();
         }
         return test;
+    }
+
+    public List<EmotivTest> findTestsByUser(EmotivUser user) {
+
+        PreparedStatement prepare = prepare(Constants.Database.User.FIND_TEST_BY_USER, user.getId());
+        List<EmotivTest> tests= new ArrayList<>();
+        try {
+            getConnection().setAutoCommit(false);
+            ResultSet resultSet = prepare.executeQuery();
+            while (resultSet.next()){
+
+                EmotivTest test = new EmotivTest();
+                test.setId(resultSet.getInt(Constants.Database.Test.ID));
+                test.setBaselineId(resultSet.getInt(Constants.Database.Test.BASELINE_ID));
+                test.setDescription(resultSet.getString(Constants.Database.Test.DESCRIPTION));
+                test.setGenre(resultSet.getString(Constants.Database.Test.GENRE));
+                test.setSongname(resultSet.getString(Constants.Database.Test.SONGNAME));
+                test.setArtist(resultSet.getString(Constants.Database.Test.ARTIST));
+
+                tests.add(test);
+            }
+            getConnection().commit();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return tests;
     }
 
     public void saveBaselineReading(List<EmotivData> allReadings, EmotivBaseline baseline) {

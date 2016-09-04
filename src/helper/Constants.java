@@ -30,6 +30,10 @@ public class Constants {
 
             public static final String FIND_USER_BY_NAME = "SELECT * FROM USER WHERE " + USERNAME + "= ?;";
 
+            public static final String FIND_TEST_BY_USER = "SELECT * FROM TEST JOIN BASELINE " +
+                    "ON TEST.BASELINE_ID = BASELINE.ID JOIN USER " +
+                    "ON BASELINE.USER_ID = USER.ID " +
+                    "WHERE USER.ID = ?";
         }
 
         public class Baseline {
@@ -42,6 +46,7 @@ public class Constants {
                     "VALUES (?);";
 
             public static final String FIND_BASELINE_BY_USER = "SELECT * FROM BASELINE WHERE " + USER_ID + "= ?;";
+
 
         }
 

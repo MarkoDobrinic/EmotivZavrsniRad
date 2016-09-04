@@ -65,6 +65,12 @@ public class MainScreenController extends Window implements ControlledScreen {
     }
 
     @FXML
+    private Menu menuMain;
+
+    @FXML
+    private MenuItem menuShowAnalytics;
+
+    @FXML
     private TextField tfArtist;
 
     @FXML
@@ -84,6 +90,16 @@ public class MainScreenController extends Window implements ControlledScreen {
 
     @FXML
     private LineChart<Integer, Double> chartMainMusic;
+
+    @FXML
+    private void onMenuShowAnalytics(ActionEvent event){
+
+        EmotivContext.APP.primaryStage.isResizable();
+        EmotivContext.APP.primaryStage.setHeight(735);
+        EmotivContext.APP.primaryStage.setWidth(1461);
+        WindowHelper.centerWindow();
+        myController.setScreen(EmotivMusicApp.screenAnalyticsID);
+    }
 
     @FXML
     private void onBtnSaveTest(ActionEvent event) {
@@ -107,24 +123,14 @@ public class MainScreenController extends Window implements ControlledScreen {
                             emotivTest = EmotivContext.DAO.saveTest(emotivTest);
                             emotivTestMeasure.setBaselineId(EmotivContext.BASELINE.getId());
                             EmotivContext.DAO.saveTestReading(mainReadings, emotivTest, EmotivContext.BASELINE );
-                            // myController.unloadScreen(EmotivMusicApp.screen3ID);
+                            // myController.unloadScreen(EmotivMusicApp.screenBaselineID);
                             return null;
                         }
                     };
                 }
             };
             dbTestInsertData.start();
-
-            dbTestInsertData.setOnSucceeded(event1 -> {
-                try {
-                    EmotivContext.APP.primaryStage.setMinHeight(1030);
-                    EmotivContext.APP.primaryStage.setMinWidth(1520);
-                    WindowHelper.centerWindow();
-                    myController.setScreen(EmotivMusicApp.screenMainID);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            });
+            System.out.println("Successfully inserted data.");
         } else {
             //TODO
         }
@@ -327,6 +333,8 @@ public class MainScreenController extends Window implements ControlledScreen {
 
     }
 
+    public void onMenuMain(ActionEvent event) {
+    }
 }
 
 

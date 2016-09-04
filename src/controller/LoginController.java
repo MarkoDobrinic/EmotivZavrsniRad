@@ -51,7 +51,7 @@ public class LoginController implements Initializable, ControlledScreen {
             EmotivContext.APP.primaryStage.setMinHeight(800);
             EmotivContext.APP.primaryStage.setMinWidth(900);
             WindowHelper.centerWindow();
-            myController.setScreen(EmotivMusicApp.screen3ID);
+            myController.setScreen(EmotivMusicApp.screenBaselineID);
 
         } else {
             lblMessage.setText("Username or password invalid!");

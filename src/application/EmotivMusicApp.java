@@ -19,12 +19,16 @@ public class EmotivMusicApp extends Application {
     private MediaPlayer mediaPlayer;
 
 
-    public static String screen2ID = "screen2";
-    public static String screen2File = "../view/UserInfo.fxml";
-    public static String screen3ID = "screen3";
-    public static String screen3File = "../view/BaselineCalibration.fxml";
+    public static String screenLoginID = "screen2";
+    public static String screenLoginFile = "../view/UserInfo.fxml";
+    public static String screenBaselineID = "screen3";
+    public static String screenBaselineFile = "../view/BaselineCalibration.fxml";
     public static String screenMainID = "screenMain";
     public static String screenMainFile = "../view/MainScreen.fxml";
+    public static String screenAnalyticsID = "screenAnalytics";
+    public static String screenAnalyticsFile = "../view/TestAnalytics.fxml";
+    public static String screenEmotivStatusID = "screenEmotivStatus";
+    public static String screenEmotivStatusFile = "../view/EmotivStatus.fxml";
 //    public static String spinnerID = "spinner";
 //    public static String spinnerFile = "../view/Spinner.fxml";
 
@@ -41,12 +45,12 @@ public class EmotivMusicApp extends Application {
 
         ScreensController mainContainer = new ScreensController();
         //mainContainer.loadScreen(EmotivMusicApp.screen1ID, EmotivMusicApp.screen1File);
-        mainContainer.loadScreen(EmotivMusicApp.screen2ID, EmotivMusicApp.screen2File);
-        mainContainer.loadScreen(EmotivMusicApp.screen3ID, EmotivMusicApp.screen3File);
+        mainContainer.loadScreen(EmotivMusicApp.screenLoginID, EmotivMusicApp.screenLoginFile);
+        mainContainer.loadScreen(EmotivMusicApp.screenBaselineID, EmotivMusicApp.screenBaselineFile);
         mainContainer.loadScreen(EmotivMusicApp.screenMainID, EmotivMusicApp.screenMainFile);
+        mainContainer.loadScreen(EmotivMusicApp.screenAnalyticsID, EmotivMusicApp.screenAnalyticsFile);
 
-
-        mainContainer.setScreen(EmotivMusicApp.screen2ID);
+        mainContainer.setScreen(EmotivMusicApp.screenLoginID);
 
         Group root = new Group();
         root.getChildren().addAll(mainContainer);
@@ -55,7 +59,6 @@ public class EmotivMusicApp extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
 
-        // prepareData();
     }
 
 
