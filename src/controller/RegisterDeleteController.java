@@ -37,8 +37,8 @@ public class RegisterDeleteController implements ControlledScreen {
     @FXML
     private void onBtnLogin(){
 
-        EmotivContext.APP.primaryStage.setHeight(396);
-        EmotivContext.APP.primaryStage.setWidth(441);
+//        EmotivContext.APP.primaryStage.setHeight(396);
+//        EmotivContext.APP.primaryStage.setWidth(441);
         WindowHelper.centerWindow();
         myController.setScreen(EmotivMusicApp.screenLoginID);
     }

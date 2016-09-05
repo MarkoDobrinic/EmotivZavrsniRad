@@ -1,6 +1,5 @@
 package dao;
 
-import com.sun.org.apache.regexp.internal.RE;
 import helper.Constants;
 import model.*;
 
@@ -108,6 +107,7 @@ public class EmotivDao {
                 measure.setBetaHigh(resultSet.getDouble(Constants.Database.TestMeasure.BETAHIGH));
                 measure.setGamma(resultSet.getDouble(Constants.Database.TestMeasure.GAMMA));
                 measure.setTheta(resultSet.getDouble(Constants.Database.TestMeasure.THETA));
+                measure.setTime(resultSet.getInt(Constants.Database.TestMeasure.TIME));
                 measureList.add(measure);
             }
             getConnection().commit();
@@ -117,6 +117,7 @@ public class EmotivDao {
         }
         return measureList;
     }
+
 
     public List<EmotivTest> findTestsByUser(EmotivUser user) {
 
@@ -146,15 +147,47 @@ public class EmotivDao {
         return tests;
     }
 
+    public List<EmotivTest> findTestsWithAvgMeasuresByUser(EmotivUser user) {
+
+        PreparedStatement prepare = prepare(Constants.Database.User.FIND_TEST_BY_USER, user.getId());
+        List<EmotivTest> tests= new ArrayList<>();
+        try {
+            getConnection().setAutoCommit(false);
+            ResultSet resultSet = prepare.executeQuery();
+            while (resultSet.next()){
+
+                EmotivTest test = new EmotivTest();
+                test.setId(resultSet.getInt(Constants.Database.Test.ID));
+                test.setBaselineId(resultSet.getInt(Constants.Database.Test.BASELINE_ID));
+                test.setDescription(resultSet.getString(Constants.Database.Test.DESCRIPTION));
+                test.setGenre(resultSet.getString(Constants.Database.Test.GENRE));
+                test.setSongname(resultSet.getString(Constants.Database.Test.SONGNAME));
+                test.setSongDuration(resultSet.getDouble(Constants.Database.Test.SONGDURATION));
+                test.setArtist(resultSet.getString(Constants.Database.Test.ARTIST));
+                test.setMeasures(findAvgWaveByTime(test));
+                tests.add(test);
+            }
+            getConnection().commit();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return tests;
+    }
+
     public Double findAvgAlphaByTestId(Integer id){
         PreparedStatement prepare = prepare(Constants.Database.TestMeasure.FIND_AVG_ALPHA_BY_TEST_ID, id);
-        Double avgWave = 0d;
+        Double avgWave = 0.0;
         try{
             ResultSet resultSet = prepare.executeQuery();
             avgWave = resultSet.getDouble("avgAlpha");
+                //System.out.println("avgAlpha: " + resultSet.getDouble("avgBetaLow"));
+
+            getConnection().commit();
         }catch (SQLException e){
             e.printStackTrace();
         }
+        System.out.println("avgAlpha:" + avgWave);
         return avgWave;
     }
     public Double findAvgBetaLowByTestId(Integer id){
@@ -163,7 +196,7 @@ public class EmotivDao {
         try{
             ResultSet resultSet = prepare.executeQuery();
             avgWave = resultSet.getDouble("avgBetaLow");
-            System.out.println(resultSet.getDouble("avgBetaLow"));
+            getConnection().commit();
         }catch (SQLException e){
             e.printStackTrace();
         }
@@ -175,7 +208,7 @@ public class EmotivDao {
         try{
             ResultSet resultSet = prepare.executeQuery();
             avgWave = resultSet.getDouble("avgBetaHigh");
-            System.out.println(resultSet.getDouble("avgBetaHigh"));
+            getConnection().commit();
         }catch (SQLException e){
             e.printStackTrace();
         }
@@ -188,7 +221,7 @@ public class EmotivDao {
         try{
             ResultSet resultSet = prepare.executeQuery();
             avgWave = resultSet.getDouble("avgGamma");
-            System.out.println(resultSet.getDouble("avgGamma"));
+            getConnection().commit();
         }catch (SQLException e){
             e.printStackTrace();
         }
@@ -201,11 +234,36 @@ public class EmotivDao {
         try{
             ResultSet resultSet = prepare.executeQuery();
             avgWave = resultSet.getDouble("avgTheta");
-            System.out.println(resultSet.getDouble("avgTheta"));
+            getConnection().commit();
         }catch (SQLException e){
             e.printStackTrace();
         }
         return avgWave;
+    }
+
+    public List<EmotivTestMeasure> findAvgWaveByTime(EmotivTest test){
+        PreparedStatement prepare = prepare(Constants.Database.TestMeasure.FIND_TEST_MEASURE_AVG_BY_TIME, test.getId());
+        List<EmotivTestMeasure> emotivDataList = new ArrayList<>();
+
+        try {
+            ResultSet resultSet = prepare.executeQuery();
+            getConnection().setAutoCommit(false);
+            while (resultSet.next()){
+                EmotivTestMeasure measure = new EmotivTestMeasure();
+                measure.setAlpha(resultSet.getDouble("avgAlpha"));
+                measure.setBetaLow(resultSet.getDouble("avgBetaLow"));
+                measure.setBetaHigh(resultSet.getDouble("avgBetaHigh"));
+                measure.setGamma(resultSet.getDouble("avgGamma"));
+                measure.setTheta(resultSet.getDouble("avgTheta"));
+                measure.setTime(resultSet.getInt("TIME"));
+                emotivDataList.add(measure);
+                getConnection().commit();
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return emotivDataList;
     }
 
 

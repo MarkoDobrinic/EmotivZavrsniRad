@@ -71,10 +71,6 @@ public class LoginController implements Initializable, ControlledScreen {
         myController.setScreen(EmotivMusicApp.screenRegisterDeleteID);
     }
 
-    @FXML
-    private void onItemDelete(){
-
-    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {

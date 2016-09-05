@@ -43,9 +43,7 @@ public class EmotivMusicApp extends Application {
         //EmotivContext.DAO.findLastTest();
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("Emotiv EEG");
-//
-//        initRootLayout();
-//        showUserScene();
+
 
         ScreensController mainContainer = new ScreensController();
         mainContainer.loadScreen(EmotivMusicApp.screenLoginID, EmotivMusicApp.screenLoginFile);
@@ -53,6 +51,7 @@ public class EmotivMusicApp extends Application {
         mainContainer.loadScreen(EmotivMusicApp.screenMainID, EmotivMusicApp.screenMainFile);
         mainContainer.loadScreen(EmotivMusicApp.screenAnalyticsID, EmotivMusicApp.screenAnalyticsFile);
         mainContainer.loadScreen(EmotivMusicApp.screenRegisterDeleteID, EmotivMusicApp.screenRegisterDeleteFile);
+
 
         mainContainer.setScreen(EmotivMusicApp.screenLoginID);
 
@@ -62,7 +61,6 @@ public class EmotivMusicApp extends Application {
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
         primaryStage.show();
-
     }
 
 

@@ -64,6 +64,7 @@ public class MainScreenController extends Window implements ControlledScreen {
         myController = screenParent;
     }
 
+
     @FXML
     private Menu menuMain;
 

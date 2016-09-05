@@ -110,15 +110,19 @@ public class Constants {
             public static final String BETAHIGH = "BETAHIGH";
             public static final String GAMMA = "GAMMA";
             public static final String THETA = "THETA";
+            public static final String TIME = "TIME";
             /***
              * CREATE USER
              */
             public static final String INSERT_TEST_MEASURE = "INSERT INTO TEST_MEASURE (" +
                     BASELINE_ID + ", " + NODE_ID + ", " + TEST_ID + ", " + ALPHA +
-                    ", " + BETALOW + ", " + BETAHIGH + ", " + GAMMA + ", " + THETA +
-                    ")" + "VALUES (?,?,?,?,?,?,?,?)";
+                    ", " + BETALOW + ", " + BETAHIGH + ", " + GAMMA + ", " + THETA + ", " + TIME +
+                    ")" + "VALUES (?,?,?,?,?,?,?,?,?)";
 
             public static final String FIND_TEST_MEASURE_BY_TEST = "SELECT * FROM TEST_MEASURE WHERE TEST_ID = ?    ";
+
+            public static final String FIND_TEST_MEASURE_AVG_BY_TIME = "SELECT TIME, AVG(ALPHA) AS avgAlpha, AVG(BETALOW) AS avgBetaLow, AVG(BETAHIGH) AS avgBetaHigh, AVG(GAMMA) AS avgGamma, " +
+                    "AVG(THETA) AS avgTheta FROM TEST_MEASURE WHERE TEST_ID = ? GROUP BY TIME ORDER BY TIME ASC;";
 
             public static final String FIND_AVG_ALPHA_BY_NODE = "SELECT AVG(ALPHA) FROM TEST_MEASURE WHERE TEST_ID = ? GROUP BY NODE_ID";
 

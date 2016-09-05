@@ -68,7 +68,9 @@ public class TestAnalyticsController implements ControlledScreen {
 
     @FXML
     private void onBtnReload(){
+
         populateTestList();
+
     }
 
     @Override
@@ -79,6 +81,7 @@ public class TestAnalyticsController implements ControlledScreen {
     @Override
     public void init() {
         initializeGuiElements();
+        addAllChartData();
         emotivBaseline = new EmotivBaseline();
         emotivTest = EmotivContext.TEST;
         setOnListItemClickListener();
@@ -105,7 +108,7 @@ public class TestAnalyticsController implements ControlledScreen {
                     protected Void call() throws Exception {
 
                         emotivUser = EmotivContext.LOGGED_USER;
-                        List<EmotivTest> tests = EmotivContext.DAO.findTestsByUser(emotivUser);
+                        List<EmotivTest> tests = EmotivContext.DAO.findTestsWithAvgMeasuresByUser(emotivUser);
                         ObservableList<EmotivTest> myTests = FXCollections.observableList(tests);
                         lvTestList.setItems(myTests);
                         lvTestList.setCellFactory(new Callback<ListView<EmotivTest>, ListCell<EmotivTest>>() {
@@ -167,11 +170,15 @@ public class TestAnalyticsController implements ControlledScreen {
                     txtTestInfo.setText("Song name: " + observable.getValue().getSongname() + "\n" +
                             "Artist: " + observable.getValue().getArtist()+ "Measures: " + observable.getValue().getMeasures().size());
 
-                    observable.equals(EmotivContext.TEST);
+
+                    System.out.println(observable.getValue().toString());
                     //System.out.println(EmotivContext.DAO.findTestMeasuresByTestId(observable.getValue().getId()));
                     //chartTest.getData().clear();
-                    plotChart(observable.getValue());
-
+                    EmotivTest test1 = observable.getValue();
+//                    clearChartData();
+//                    addAllChartData();
+                    System.out.println("passing test.. " + test1.toString());
+                    plotChart(test1);
                     });
                 }
             }
@@ -180,6 +187,9 @@ public class TestAnalyticsController implements ControlledScreen {
 
     private void plotChart(EmotivTest test) {
 
+        Integer songDuration = test.getSongDuration().intValue();
+
+        System.out.println("Total measures: " + test.getMeasures().size());
         EmotivBaselineMeasure measure = EmotivContext.DAO.getAverageMeasure(EmotivContext.BASELINE);
 
         System.out.println("plotting....");
@@ -195,47 +205,44 @@ public class TestAnalyticsController implements ControlledScreen {
         switch (choice){
 
             case "Base Alpha / Test Alpha" :
-                clearChartData();
                 alphaBase.setName("Alpha Base");
-                chartTest.getData().add(alphaBase);
                 alphaTest.setName("Alpha test");
-                chartTest.getData().add(alphaTest);
-                for (int time = 0; time < test.getSongDuration() ; time++) {
-                    alphaBase.getData().add(new XYChart.Data<>(time, 2 + measure.getAlpha()));
-                    alphaTest.getData().add(new XYChart.Data<>(time, 2 +EmotivContext.DAO.findAvgAlphaByTestId(test.getId())));
+
+                System.out.println(test.getSongDuration().intValue());
+                for (int time = 0; time < songDuration ; time++) {
+
+                    alphaBase.getData().add(new XYChart.Data<>(time,  measure.getAlpha()));
+                    alphaTest.getData().add(new XYChart.Data<>(time, test.getMeasures().get(time).getAlpha()));
                 }
                 break;
             case "Base BetaLow / Test BetaLow" :
-                clearChartData();
+
                 betaLowBase.setName("BetaLow Base");
-                chartTest.getData().add(betaLowBase);
                 betaLowTest.setName("BetaLow Test");
-                chartTest.getData().add(betaLowTest);
-                for (int time = 0; time < test.getSongDuration() ; time++) {
-                    betaLowBase.getData().add(new XYChart.Data<>(time, 2 + measure.getBetaLow()));
-                    betaLowTest.getData().add(new XYChart.Data<>(time, 2 + EmotivContext.DAO.findAvgBetaLowByTestId(test.getId())));
+
+                for (int time = 0; time < songDuration ; time++) {
+                    betaLowBase.getData().add(new XYChart.Data<>(time,  measure.getBetaLow()));
+                    betaLowTest.getData().add(new XYChart.Data<>(time, test.getMeasures().get(time).getBetaLow()));
                 }
                 break;
             case "Base BetaHigh / Test BetaHigh" :
-                clearChartData();
-                betaLowBase.setName("BetaHigh Base");
-                chartTest.getData().add(betaHighBase);
-                betaLowTest.setName("BetaHigh Test");
-                chartTest.getData().add(betaHighTest);
-                for (int time = 0; time < test.getSongDuration() ; time++) {
-                    betaHighBase.getData().add(new XYChart.Data<>(time, 2 + measure.getBetaHigh()));
-                    betaHighTest.getData().add(new XYChart.Data<>(time, 2 + EmotivContext.DAO.findAvgBetaHighByTestId(test.getId())));
+
+                betaHighBase.setName("BetaHigh Base");
+                betaHighTest.setName("BetaHigh Test");
+
+                for (int time = 0; time < songDuration; time++) {
+                    betaHighBase.getData().add(new XYChart.Data<>(time,  measure.getBetaHigh()));
+                    betaHighTest.getData().add(new XYChart.Data<>(time,  test.getMeasures().get(time).getBetaHigh()));
                 }
                 break;
             case "Base Gamma / Test Gamma" :
-                clearChartData();
+
                 gammaBase.setName("Gamma Base");
-                chartTest.getData().add(gammaBase);
                 gammaTest.setName("Gamma Test");
-                chartTest.getData().add(gammaTest);
-                for (int time = 0; time < test.getSongDuration() ; time++) {
-                    gammaBase.getData().add(new XYChart.Data<>(time, 2 + measure.getGamma()));
-                    gammaTest.getData().add(new XYChart.Data<>(time, 2 + EmotivContext.DAO.findAvgGammaByTestId(test.getId())));
+
+                for (int time = 0; time < songDuration ; time++) {
+                    gammaBase.getData().add(new XYChart.Data<>(time,  measure.getGamma()));
+                    gammaTest.getData().add(new XYChart.Data<>(time, test.getMeasures().get(time).getGamma()));
                 }
                 break;
             default:
@@ -278,12 +285,18 @@ public class TestAnalyticsController implements ControlledScreen {
         cbTestMeasure.setValue("Base Alpha / Test Alpha");
 
 
+
         cbTestMeasure.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                Platform.runLater(() -> plotChart(EmotivContext.TEST));
+
+                System.out.println("Old Selected Option: " +
+                        oldValue);
+                System.out.println("New Selected Option: " + newValue  );
+                Platform.runLater(() -> plotChart(lvTestList.getSelectionModel().getSelectedItems().get(0)));
             }
         });
+
 
     }
 
@@ -295,13 +308,13 @@ public class TestAnalyticsController implements ControlledScreen {
         gammaBase.getData().clear();
         thetaBase.getData().clear();
 
-        thetaTest.getData().clear();
+        alphaTest.getData().clear();
         betaLowTest.getData().clear();
         betaHighTest.getData().clear();
         gammaTest.getData().clear();
         thetaTest.getData().clear();
 
-        chartTest.getData().clear();
+      //  chartTest.getData().clear();
     }
 
     private void addAllChartData(){
@@ -335,6 +348,8 @@ public class TestAnalyticsController implements ControlledScreen {
 
         thetaTest.setName("Theta test");
         chartTest.getData().add(thetaTest);
+
+        chartTest.setAnimated(false);
     }
 
 

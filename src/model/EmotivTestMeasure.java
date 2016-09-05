@@ -15,7 +15,17 @@ public class EmotivTestMeasure {
     private Double betaHigh;
     private Double gamma;
     private Double theta;
+    private Integer time;
 
+
+
+    public Integer getTime() {
+        return time;
+    }
+
+    public void setTime(Integer time) {
+        this.time = time;
+    }
 
     public int getId() {
         return id;

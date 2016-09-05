@@ -11,6 +11,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.image.Image;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
@@ -20,7 +21,7 @@ import java.util.HashMap;
 /**
  * Created by RedShift on 29.8.2016..
  */
-public class ScreensController extends StackPane {
+public class ScreensController extends StackPane{
 
     /***
      * Main Screen controller that handles loading, setting and transitioning between screens.
@@ -42,9 +43,12 @@ public class ScreensController extends StackPane {
         try {
             FXMLLoader myLoader = new FXMLLoader(getClass().getResource(resource));
             Parent loadScreen = (Parent) myLoader.load();
+            System.out.println(loadScreen.toString());
             ControlledScreen myScreenController = ((ControlledScreen) myLoader.getController());
+
             myScreenController.setScreenParent(this);
             myScreenController.init();
+
             addScreen(name, loadScreen);
             return true;
         } catch (IOException e) {

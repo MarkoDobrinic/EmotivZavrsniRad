@@ -7,7 +7,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<SplitPane dividerPositions="0.5" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="674.0" prefWidth="356.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.RegisterDeleteController">
+<SplitPane dividerPositions="0.5" maxHeight="674.0" maxWidth="356.0" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="674.0" prefWidth="356.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.RegisterDeleteController">
   <items>
     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="304.0" prefWidth="354.0">
          <children>
