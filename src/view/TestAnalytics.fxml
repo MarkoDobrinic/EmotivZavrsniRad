@@ -48,15 +48,15 @@
         <Pane prefHeight="700.0" prefWidth="1137.0" BorderPane.alignment="CENTER">
             <children>
                 <TextArea fx:id="txtTestInfo" editable="false" layoutX="80.0" layoutY="44.0" prefHeight="174.0" prefWidth="731.0" />
-                <LineChart fx:id="chartTest" createSymbols="false" layoutX="45.0" layoutY="237.0" prefHeight="522.0" prefWidth="778.0">
+                <LineChart fx:id="chartTest" createSymbols="false" layoutX="57.0" layoutY="266.0" prefHeight="522.0" prefWidth="778.0">
                     <xAxis>
                         <NumberAxis side="BOTTOM" tickUnit="10" />
                     </xAxis>
                     <yAxis>
-                        <NumberAxis autoRanging="false" side="LEFT" tickUnit="0.01" upperBound="3" lowerBound="0" />
+                        <NumberAxis autoRanging="false" lowerBound="0" side="LEFT" tickUnit="0.01" upperBound="3" />
                     </yAxis>
                 </LineChart>
-            <ChoiceBox fx:id="cbTestMeasure" layoutX="80.0" layoutY="795.0" prefHeight="31.0" prefWidth="295.0" />
+            <ChoiceBox fx:id="cbTestMeasure" layoutX="80.0" layoutY="825.0" prefHeight="31.0" prefWidth="295.0" />
             </children>
         </Pane>
     </center>

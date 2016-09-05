@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="396.0" maxWidth="600.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="396.0" prefWidth="441.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.LoginController">
+    <children>
+      <VBox alignment="CENTER" layoutY="78.0" prefHeight="396.0" prefWidth="441.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <HBox alignment="CENTER">
+               <children>
+                  <ImageView fitHeight="109.0" fitWidth="157.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../documents/resources/emotiv-logo.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </HBox>
+              <Label prefHeight="32.0" prefWidth="67.0" text="Username" />
+              <TextField fx:id="tfUsername" prefHeight="31.0" prefWidth="250.0" promptText="Username">
+               <VBox.margin>
+                  <Insets bottom="15.0" top="15.0" />
+               </VBox.margin>
+            </TextField>
+              <Label text="Password" />
+              <PasswordField fx:id="tfPassword" prefHeight="31.0" prefWidth="250.0" promptText="Password">
+               <VBox.margin>
+                  <Insets bottom="15.0" top="15.0" />
+               </VBox.margin>
+            </PasswordField>
+              <Button fx:id="btnLogin" mnemonicParsing="false" onAction="#btnLoginAction" prefHeight="47.0" prefWidth="176.0" text="Login">
+               <font>
+                  <Font size="20.0" />
+               </font></Button>
+         </children>
+      </VBox>
+      <MenuBar layoutY="-2.0" prefHeight="31.0" prefWidth="441.0">
+        <menus>
+          <Menu mnemonicParsing="false" text="User">
+            <items>
+              <MenuItem fx:id="itemRegisterDelete" mnemonicParsing="false" onAction="#onItemRegisterDelete" text="Register/Delete" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Help">
+            <items>
+              <MenuItem mnemonicParsing="false" text="About" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+    </children>
+</AnchorPane>

@@ -1,14 +1,10 @@
 package controller;
 
 import application.EmotivMusicApp;
-import controller.ScreensController;
 import controller.maincontroller.ControlledScreen;
 import helper.WindowHelper;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import model.EmotivContext;
 import model.EmotivUser;
 
@@ -37,8 +33,8 @@ public class RegisterDeleteController implements ControlledScreen {
     @FXML
     private void onBtnLogin(){
 
-//        EmotivContext.APP.primaryStage.setHeight(396);
-//        EmotivContext.APP.primaryStage.setWidth(441);
+        EmotivContext.APP.primaryStage.setHeight(396);
+        EmotivContext.APP.primaryStage.setWidth(550);
         WindowHelper.centerWindow();
         myController.setScreen(EmotivMusicApp.screenLoginID);
     }
@@ -58,18 +54,36 @@ public class RegisterDeleteController implements ControlledScreen {
     @FXML
     private void onBtnDeleteUser(){
 
-        String username =  tfRegister.getText();
-        String password = pfRegister.getText();
+        String username =  tfDelete.getText();
+        String password = pfDelete.getText();
 
         if (!Objects.equals(password, "") && !Objects.equals(username, "")) {
-            EmotivContext.DAO.deleteUser(username);
-            lblDelete.setText("User deleted!");
+          if(EmotivContext.DAO.deleteUser(username)){
+              Alert alert = new Alert(Alert.AlertType.INFORMATION);
+              alert.setTitle("User info");
+              alert.setHeaderText(null);
+              alert.setContentText("User successfully deleted");
+              alert.showAndWait();
+          }else {
+              Alert alert = new Alert(Alert.AlertType.WARNING);
+              alert.setTitle("Warning: ");
+              alert.setHeaderText("User cannot be deleted!");
+              alert.setContentText("User: " + username + " does not exist!" );
+              alert.showAndWait();
+          }
+        }else{
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Warning: ");
+            alert.setHeaderText("Please enter username and password!");
+
+            alert.showAndWait();
         }
+
     }
 
     @Override
-    public void setScreenParent(ScreensController screenPage) {
-        myController = screenPage;
+    public void setScreenParent(ScreensController screenController) {
+        myController = screenController;
     }
 
     @Override

@@ -78,6 +78,8 @@ public class BaselineController extends EmotivMusicApp implements ControlledScre
         seriesGamma.getData().clear();
         seriesTheta.getData().clear();
 
+        chartBaseline.setAnimated(false);
+
 
         System.out.println("Size: " + allReadings.size());
 
@@ -94,8 +96,8 @@ public class BaselineController extends EmotivMusicApp implements ControlledScre
             seriesAlpha.getData().add(new XYChart.Data<>(time, avgAlpha));
             seriesBetaLow.getData().add(new XYChart.Data<>(time, 2 + avgBetaLow));
             seriesBetaHigh.getData().add(new XYChart.Data<>(time, 4 + avgBetaHigh));
-            seriesTheta.getData().add(new XYChart.Data<>(time, 6 + avgGamma));
-            seriesGamma.getData().add(new XYChart.Data<>(time, 8 + avgTheta));
+            seriesGamma.getData().add(new XYChart.Data<>(time, 6 + avgGamma));
+            seriesTheta.getData().add(new XYChart.Data<>(time, 8 + avgTheta));
         }
     }
 
@@ -154,11 +156,11 @@ public class BaselineController extends EmotivMusicApp implements ControlledScre
         seriesAlpha.setName("Alpha");
         chartBaseline.getData().add(seriesAlpha);
 
-        seriesBetaHigh.setName("Beta High");
-        chartBaseline.getData().add(seriesBetaHigh);
-
         seriesBetaLow.setName("Beta Low");
         chartBaseline.getData().add(seriesBetaLow);
+
+        seriesBetaHigh.setName("Beta High");
+        chartBaseline.getData().add(seriesBetaHigh);
 
         seriesGamma.setName("Gamma");
         chartBaseline.getData().add(seriesGamma);
@@ -191,8 +193,9 @@ public class BaselineController extends EmotivMusicApp implements ControlledScre
                         seriesAlpha.getData().add(new XYChart.Data<>(time, avgAlpha));
                         seriesBetaLow.getData().add(new XYChart.Data<>(time, 2 + avgBetaLow));
                         seriesBetaHigh.getData().add(new XYChart.Data<>(time, 4 + avgBetaHigh));
-                        seriesTheta.getData().add(new XYChart.Data<>(time, 6 + avgGamma));
-                        seriesGamma.getData().add(new XYChart.Data<>(time, 8 + avgTheta));
+                        seriesGamma.getData().add(new XYChart.Data<>(time, 8 + avgGamma));
+                        seriesTheta.getData().add(new XYChart.Data<>(time, 6 + avgTheta));
+
                     }
             );
 
@@ -217,8 +220,8 @@ public class BaselineController extends EmotivMusicApp implements ControlledScre
     }
 
     @Override
-    public void setScreenParent(ScreensController screenParent) {
-        myController = screenParent;
+    public void setScreenParent(ScreensController screenController) {
+        myController = screenController;
     }
 
 

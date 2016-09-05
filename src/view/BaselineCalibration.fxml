@@ -16,7 +16,7 @@
                 <NumberAxis autoRanging="false" lowerBound="0" side="BOTTOM" upperBound="120" />
             </xAxis>
             <yAxis>
-                <NumberAxis autoRanging="false" lowerBound="0" side="LEFT" tickUnit="2.0" upperBound="10" />
+                <NumberAxis autoRanging="false" lowerBound="0" side="LEFT" tickLabelsVisible="false" tickUnit="2.0" upperBound="10" />
             </yAxis>
         </LineChart>
     </center>
@@ -36,11 +36,6 @@
               <MenuItem fx:id="itemAverage" mnemonicParsing="false" onAction="#onItemAverage" text="Average" />
                   <MenuItem fx:id="itemSaveBaseline" mnemonicParsing="false" onAction="#onItemSaveBaseline" text="Save Baseline" />
                   <MenuItem fx:id="itemSkip" mnemonicParsing="false" onAction="#onItemSkip" text="Skip calibration" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Edit">
-            <items>
-              <MenuItem mnemonicParsing="false" text="Delete" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Help">

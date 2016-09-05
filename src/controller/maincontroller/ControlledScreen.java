@@ -9,10 +9,10 @@ public interface ControlledScreen {
 
     /***
      * Interface used for communication between screens - setting the screen parent.
-     * @param screenPage
+     * @param screenController
      */
 
-    public void setScreenParent(ScreensController screenPage);
+    public void setScreenParent(ScreensController screenController);
 
     public void init();
 }

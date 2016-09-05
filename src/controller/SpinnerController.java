@@ -9,13 +9,11 @@ import javafx.scene.control.ProgressIndicator;
  */
 public class SpinnerController implements ControlledScreen {
 
-    private int value = 1680;
-
     @FXML
     public ProgressIndicator dialogSpinner;
 
     @Override
-    public void setScreenParent(ScreensController screenPage) {
+    public void setScreenParent(ScreensController screenController) {
 
     }
 

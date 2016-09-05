@@ -387,17 +387,21 @@ public class EmotivDao {
         return baselineMeasure;
     }
 
-    public void deleteUser(String username){
+    public boolean deleteUser(String username){
 
         PreparedStatement prepare = prepare(Constants.Database.User.DELETE_USER, username);
 
         try {
             prepare.execute();
             getConnection().commit();
+            System.out.println("User successfully deleted.");
+            return true;
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        System.out.println("User successfully deleted.");
+        System.out.println("User cannot be deleted.");
+
+        return false;
     }
 
     public void deleteTest(Integer id){

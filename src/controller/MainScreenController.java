@@ -57,11 +57,12 @@ public class MainScreenController extends Window implements ControlledScreen {
     public XYChart.Series<Integer, Double> mainBetaHigh = new XYChart.Series<>();
     public XYChart.Series<Integer, Double> mainGamma = new XYChart.Series<>();
     public XYChart.Series<Integer, Double> mainTheta = new XYChart.Series<>();
+    private boolean fileChosen = false;
 
 
     @Override
-    public void setScreenParent(ScreensController screenParent) {
-        myController = screenParent;
+    public void setScreenParent(ScreensController screenController) {
+        myController = screenController;
     }
 
 
@@ -69,7 +70,7 @@ public class MainScreenController extends Window implements ControlledScreen {
     private Menu menuMain;
 
     @FXML
-    private MenuItem menuShowAnalytics;
+    private MenuItem menuShowAnalytics, menuShowEmotivStatus;
 
     @FXML
     private TextField tfArtist;
@@ -81,10 +82,7 @@ public class MainScreenController extends Window implements ControlledScreen {
     private ChoiceBox<String> cbGenre;
 
     @FXML
-    private ChoiceBox cbTest;
-
-    @FXML
-    private Button btnOpenFile, btnSaveSongInfo;
+    private Button btnOpenFile, btnSaveTest, btnResetTest;
 
     @FXML
     public Button btnPlayerStart, btnPlayerStop;
@@ -103,11 +101,21 @@ public class MainScreenController extends Window implements ControlledScreen {
     }
 
     @FXML
-    private void onMenuShowAnalytics(ActionEvent event){
+    private void onMenuShowEmotivStatus(ActionEvent event) {
 
-        EmotivContext.APP.primaryStage.isResizable();
         EmotivContext.APP.primaryStage.setHeight(735);
         EmotivContext.APP.primaryStage.setWidth(1461);
+        WindowHelper.centerWindow();
+        myController.setScreen(EmotivMusicApp.screenAnalyticsID);
+    }
+
+    @FXML
+    private void onMenuShowAnalytics(ActionEvent event) {
+
+        EmotivContext.APP.primaryStage.setHeight(735);
+        EmotivContext.APP.primaryStage.setWidth(1461);
+        EmotivContext.APP.primaryStage.setMaxHeight(735);
+        EmotivContext.APP.primaryStage.setMaxWidth(1461);
         WindowHelper.centerWindow();
         myController.setScreen(EmotivMusicApp.screenAnalyticsID);
     }
@@ -145,7 +153,7 @@ public class MainScreenController extends Window implements ControlledScreen {
 
                             emotivTestMeasure.setBaselineId(EmotivContext.BASELINE.getId());
                             emotivTestMeasure.setTestId(EmotivContext.TEST.getId());
-                            EmotivContext.DAO.saveTestReading(mainReadings, EmotivContext.TEST, EmotivContext.BASELINE );
+                            EmotivContext.DAO.saveTestReading(mainReadings, EmotivContext.TEST, EmotivContext.BASELINE);
 
                             // todo - još treba vidjet jel ovo potrebno spremiti
 
@@ -174,14 +182,11 @@ public class MainScreenController extends Window implements ControlledScreen {
         }
     }
 
-    @FXML
-    private void onBtnSaveSongInfo(ActionEvent event) {
-
-
-    }
 
     @FXML
     public void onBtnPlayerStart(ActionEvent event) {
+
+
         mediaPlayerService.start();
         System.out.println(mediaPlayerService.getSongDuration());
         mainReadings.clear();
@@ -190,6 +195,7 @@ public class MainScreenController extends Window implements ControlledScreen {
         /***
          * dodano novo: provjeriti
          */
+
     }
 
     @FXML
@@ -219,7 +225,6 @@ public class MainScreenController extends Window implements ControlledScreen {
             if (file != null) {
                 mediaPlayerService.setSong(file.toURI().toString());
                 mediaPlayerService.preparePlayer();
-
             }
 
         } catch (Exception e) {
@@ -228,11 +233,11 @@ public class MainScreenController extends Window implements ControlledScreen {
     }
 
 
-
     private void initializeGuiElements() {
 
         Image imageStart = new Image(String.valueOf(getClass().getResource("../documents/resources/start.png")), true);
         btnPlayerStart.setGraphic(new ImageView(imageStart));
+
         Image imageStop = new Image(String.valueOf(getClass().getResource("../documents/resources/stop.png")), true);
         btnPlayerStop.setGraphic(new ImageView(imageStop));
 
@@ -242,10 +247,10 @@ public class MainScreenController extends Window implements ControlledScreen {
                 "Blues", "Electronic"
         ));
 
-        cbTest.setItems(FXCollections.observableArrayList(
-                "Baseline", "Alpha/Theta", "Theta/Low Beta"
-        ));
-        cbTest.setValue("Baseline");
+//        cbTest.setItems(FXCollections.observableArrayList(
+//                "Baseline", "Alpha/Theta", "Theta/Low Beta"
+//        ));
+//        cbTest.setValue("Baseline");
 
     }
 
@@ -333,7 +338,7 @@ public class MainScreenController extends Window implements ControlledScreen {
 
     }
 
-    private void clearAllData(){
+    private void clearAllData() {
 
         seriesAlphaBase.getData().clear();
         seriesBetaLowBase.getData().clear();
@@ -351,6 +356,8 @@ public class MainScreenController extends Window implements ControlledScreen {
 
     public void onMenuMain(ActionEvent event) {
     }
+
+
 }
 
 

@@ -18,9 +18,8 @@ public class EmotivMusicApp extends Application {
     private AnchorPane rootLayout;
     private MediaPlayer mediaPlayer;
 
-
     public static String screenLoginID = "screen2";
-    public static String screenLoginFile = "../view/UserInfo.fxml";
+    public static String screenLoginFile = "../view/Login.fxml";
     public static String screenBaselineID = "screen3";
     public static String screenBaselineFile = "../view/BaselineCalibration.fxml";
     public static String screenMainID = "screenMain";
@@ -30,7 +29,7 @@ public class EmotivMusicApp extends Application {
     public static String screenRegisterDeleteID = "registerDelete";
     public static String screenRegisterDeleteFile = "../view/RegisterDeleteScreen.fxml";
     public static String screenEmotivStatusID = "screenEmotivStatus";
-    public static String screenEmotivStatusFile = "../view/EmotivStatus.fxml";
+    public static String screenEmotivStatusFile = "view/EmotivStatus.fxml";
 //    public static String spinnerID = "spinner";
 //    public static String spinnerFile = "../view/Spinner.fxml";
 
@@ -51,7 +50,7 @@ public class EmotivMusicApp extends Application {
         mainContainer.loadScreen(EmotivMusicApp.screenMainID, EmotivMusicApp.screenMainFile);
         mainContainer.loadScreen(EmotivMusicApp.screenAnalyticsID, EmotivMusicApp.screenAnalyticsFile);
         mainContainer.loadScreen(EmotivMusicApp.screenRegisterDeleteID, EmotivMusicApp.screenRegisterDeleteFile);
-
+        //mainContainer.loadScreen(EmotivMusicApp.screenEmotivStatusID, EmotivMusicApp.screenEmotivStatusFile);
 
         mainContainer.setScreen(EmotivMusicApp.screenLoginID);
 
@@ -60,6 +59,7 @@ public class EmotivMusicApp extends Application {
         root.setAutoSizeChildren(true);
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
+        primaryStage.setResizable(false);
         primaryStage.show();
     }
 

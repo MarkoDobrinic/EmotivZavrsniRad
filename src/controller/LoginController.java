@@ -6,17 +6,12 @@ import controller.maincontroller.ControlledScreen;
 import helper.WindowHelper;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.stage.Stage;
 import model.EmotivBaseline;
 import model.EmotivContext;
 import model.EmotivUser;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -63,10 +58,9 @@ public class LoginController implements Initializable, ControlledScreen {
     @FXML
     private void onItemRegisterDelete(){
 
-        EmotivContext.APP.primaryStage.setMaxHeight(680);
-        EmotivContext.APP.primaryStage.setHeight(680);
-        EmotivContext.APP.primaryStage.setMaxWidth(356);
-        EmotivContext.APP.primaryStage.setWidth(356);
+
+        EmotivContext.APP.primaryStage.setHeight(650);
+        EmotivContext.APP.primaryStage.setMaxWidth(347);
         WindowHelper.centerWindow();
         myController.setScreen(EmotivMusicApp.screenRegisterDeleteID);
     }
@@ -78,8 +72,8 @@ public class LoginController implements Initializable, ControlledScreen {
     }
 
     @Override
-    public void setScreenParent(ScreensController screenParent) {
-        myController = screenParent;
+    public void setScreenParent(ScreensController screenController) {
+        myController = screenController;
     }
 
     @Override

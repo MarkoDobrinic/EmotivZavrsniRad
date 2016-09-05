@@ -16,6 +16,8 @@ public class MediaPlayerService extends Service<Void> {
     public double songDuration;
     private String songName;
     private int stringPosition;
+    public boolean playing ;
+    private String songNameSpaces;
 
     @Override
     protected Task<Void> createTask() {
@@ -32,6 +34,7 @@ public class MediaPlayerService extends Service<Void> {
         };
     }
 
+
     @Override
     public void start() {
         System.out.println("State: " + this.getState());
@@ -44,9 +47,9 @@ public class MediaPlayerService extends Service<Void> {
     }
 
     public void stop() {
-
         player.stop();
         this.reset();
+
     }
 
     public void setSong(String songPath) {
@@ -61,8 +64,9 @@ public class MediaPlayerService extends Service<Void> {
             @Override
             public void run() {
                 songDuration = pick.getDuration().toSeconds();
-                stringPosition = pick.getSource().lastIndexOf('/');
-                songName = pick.getSource().substring(stringPosition);
+                stringPosition = pick.getSource().lastIndexOf('/' + 1);
+                songNameSpaces = pick.getSource().substring(stringPosition);
+                songName = songNameSpaces.replaceAll("%", " ");
                 System.out.println("duration" + pick.getDuration().toSeconds());
             }
         });
@@ -81,4 +85,6 @@ public class MediaPlayerService extends Service<Void> {
         }
         return "";
     }
+
+
 }
