@@ -6,15 +6,17 @@ import controller.maincontroller.ControlledScreen;
 import helper.WindowHelper;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.stage.Stage;
 import model.EmotivBaseline;
 import model.EmotivContext;
 import model.EmotivUser;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -27,7 +29,7 @@ public class LoginController implements Initializable, ControlledScreen {
     private ScreensController myController;
 
     @FXML
-    private Label lblMessage;
+    private MenuItem itemRegisterDelete;
 
     @FXML
     public TextField tfUsername;
@@ -54,8 +56,24 @@ public class LoginController implements Initializable, ControlledScreen {
             myController.setScreen(EmotivMusicApp.screenBaselineID);
 
         } else {
-            lblMessage.setText("Username or password invalid!");
+            System.out.println("Username or password invalid!");
         }
+    }
+
+    @FXML
+    private void onItemRegisterDelete(){
+
+        EmotivContext.APP.primaryStage.setMaxHeight(680);
+        EmotivContext.APP.primaryStage.setHeight(680);
+        EmotivContext.APP.primaryStage.setMaxWidth(356);
+        EmotivContext.APP.primaryStage.setWidth(356);
+        WindowHelper.centerWindow();
+        myController.setScreen(EmotivMusicApp.screenRegisterDeleteID);
+    }
+
+    @FXML
+    private void onItemDelete(){
+
     }
 
     @Override

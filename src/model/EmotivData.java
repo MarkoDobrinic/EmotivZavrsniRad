@@ -12,6 +12,7 @@ public class EmotivData {
     private Double theta;
     private Integer time;
 
+
     private int nodeId;
 
     public int getNodeId() {

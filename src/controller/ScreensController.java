@@ -51,7 +51,6 @@ public class ScreensController extends StackPane {
             e.printStackTrace();
             return false;
         }
-
     }
 
     public boolean setScreen(final String name) {

@@ -12,7 +12,9 @@ public final class EmotivContext {
     public static EmotivDao DAO;
     public static EmotivUser LOGGED_USER;
     public static EmotivBaseline BASELINE;
+    public static EmotivTest TEST;
 
+//todo emotiv test objekt???
 
     private EmotivContext() {
     }

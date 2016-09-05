@@ -10,12 +10,12 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import model.EmotivContext;
+import model.EmotivTest;
 
 public class EmotivMusicApp extends Application {
 
     public Stage primaryStage;
     private AnchorPane rootLayout;
-    //public MainScreenController childMainScreen;
     private MediaPlayer mediaPlayer;
 
 
@@ -27,6 +27,8 @@ public class EmotivMusicApp extends Application {
     public static String screenMainFile = "../view/MainScreen.fxml";
     public static String screenAnalyticsID = "screenAnalytics";
     public static String screenAnalyticsFile = "../view/TestAnalytics.fxml";
+    public static String screenRegisterDeleteID = "registerDelete";
+    public static String screenRegisterDeleteFile = "../view/RegisterDeleteScreen.fxml";
     public static String screenEmotivStatusID = "screenEmotivStatus";
     public static String screenEmotivStatusFile = "../view/EmotivStatus.fxml";
 //    public static String spinnerID = "spinner";
@@ -37,6 +39,8 @@ public class EmotivMusicApp extends Application {
 
         EmotivContext.APP = this;
         EmotivContext.DAO = new EmotivDao();
+        EmotivContext.TEST = new EmotivTest();
+        //EmotivContext.DAO.findLastTest();
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("Emotiv EEG");
 //
@@ -44,11 +48,11 @@ public class EmotivMusicApp extends Application {
 //        showUserScene();
 
         ScreensController mainContainer = new ScreensController();
-        //mainContainer.loadScreen(EmotivMusicApp.screen1ID, EmotivMusicApp.screen1File);
         mainContainer.loadScreen(EmotivMusicApp.screenLoginID, EmotivMusicApp.screenLoginFile);
         mainContainer.loadScreen(EmotivMusicApp.screenBaselineID, EmotivMusicApp.screenBaselineFile);
         mainContainer.loadScreen(EmotivMusicApp.screenMainID, EmotivMusicApp.screenMainFile);
         mainContainer.loadScreen(EmotivMusicApp.screenAnalyticsID, EmotivMusicApp.screenAnalyticsFile);
+        mainContainer.loadScreen(EmotivMusicApp.screenRegisterDeleteID, EmotivMusicApp.screenRegisterDeleteFile);
 
         mainContainer.setScreen(EmotivMusicApp.screenLoginID);
 

@@ -29,6 +29,7 @@ public class DeviceReader implements Runnable {
         this.running = true;
         for (int i = 0; i < readLength && this.running; i++) {
             callback.onData(deviceService.readData(i));
+
             try {
                 Thread.sleep(threadSleep);
             } catch (InterruptedException e) {

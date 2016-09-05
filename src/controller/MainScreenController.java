@@ -91,6 +91,16 @@ public class MainScreenController extends Window implements ControlledScreen {
     @FXML
     private LineChart<Integer, Double> chartMainMusic;
 
+    @Override
+    public void init() {
+        initializeGuiElements();
+        mediaPlayerService = new MediaPlayerService();
+        emotivTest = new EmotivTest();
+        emotivTestMeasure = new EmotivTestMeasure();
+        emotivData = new EmotivData();
+        emotivBaseline = new EmotivBaseline();
+    }
+
     @FXML
     private void onMenuShowAnalytics(ActionEvent event){
 
@@ -103,6 +113,7 @@ public class MainScreenController extends Window implements ControlledScreen {
 
     @FXML
     private void onBtnSaveTest(ActionEvent event) {
+
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle(" ");
@@ -119,11 +130,24 @@ public class MainScreenController extends Window implements ControlledScreen {
                         @Override
                         protected Void call() throws Exception {
 
+                            emotivTest = new EmotivTest();
+
                             emotivTest.setBaselineId(EmotivContext.BASELINE.getId());
+                            emotivTest.setGenre(cbGenre.getValue());
+                            emotivTest.setArtist(tfArtist.getText());
+                            emotivTest.setDescription(txtDescription.getText());
+                            emotivTest.setSongname(mediaPlayerService.getSongName());
+                            emotivTest.setSongDuration(mediaPlayerService.getSongDuration());
                             emotivTest = EmotivContext.DAO.saveTest(emotivTest);
+                            EmotivContext.TEST = emotivTest;
+                            System.out.println("test: " + EmotivContext.TEST.getId());
+
                             emotivTestMeasure.setBaselineId(EmotivContext.BASELINE.getId());
-                            EmotivContext.DAO.saveTestReading(mainReadings, emotivTest, EmotivContext.BASELINE );
-                            // myController.unloadScreen(EmotivMusicApp.screenBaselineID);
+                            emotivTestMeasure.setTestId(EmotivContext.TEST.getId());
+                            EmotivContext.DAO.saveTestReading(mainReadings, EmotivContext.TEST, EmotivContext.BASELINE );
+
+                            // todo - još treba vidjet jel ovo potrebno spremiti
+
                             return null;
                         }
                     };
@@ -152,22 +176,19 @@ public class MainScreenController extends Window implements ControlledScreen {
     @FXML
     private void onBtnSaveSongInfo(ActionEvent event) {
 
-        try {
-            emotivTest.setGenre(cbGenre.getValue());
-            emotivTest.setArtist(tfArtist.getText());
-            emotivTest.setDescription(txtDescription.getText());
-            emotivTest.setSongname(mediaPlayerService.getSongName());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
     }
 
     @FXML
     public void onBtnPlayerStart(ActionEvent event) {
         mediaPlayerService.start();
         System.out.println(mediaPlayerService.getSongDuration());
+        mainReadings.clear();
         plotChart();
         startDrawingData();
+        /***
+         * dodano novo: provjeriti
+         */
     }
 
     @FXML
@@ -205,15 +226,7 @@ public class MainScreenController extends Window implements ControlledScreen {
         }
     }
 
-    @Override
-    public void init() {
-        initializeGuiElements();
-        mediaPlayerService = new MediaPlayerService();
-        emotivTest = new EmotivTest();
-        emotivTestMeasure = new EmotivTestMeasure();
-        emotivData = new EmotivData();
-        emotivBaseline = new EmotivBaseline();
-    }
+
 
     private void initializeGuiElements() {
 
@@ -260,9 +273,10 @@ public class MainScreenController extends Window implements ControlledScreen {
 
         deviceReader.setReadLength(mediaPlayerService.getSongDuration().intValue());
         deviceReader.setThreadSleep(0);
+
         deviceReader.setCallback(data -> {
 
-            System.out.println("data received..." + data);
+            System.out.println("drawing data" + data);
             mainReadings.addAll(data);
 
             Integer time = data.get(0).getTime();
@@ -305,12 +319,13 @@ public class MainScreenController extends Window implements ControlledScreen {
         chartMainMusic.getData().add(seriesGammaBase);
         chartMainMusic.getData().add(seriesThetaBase);
 
+
         for (int time = 0; time < mediaPlayerService.getSongDuration(); time++) {
             seriesAlphaBase.getData().add(new XYChart.Data<>(time, measure.getAlpha()));
-            seriesBetaLowBase.getData().add(new XYChart.Data<>(time, 2 + measure.getAlpha()));
-            seriesBetaHighBase.getData().add(new XYChart.Data<>(time, 4 + measure.getAlpha()));
-            seriesThetaBase.getData().add(new XYChart.Data<>(time, 6 + measure.getAlpha()));
-            seriesGammaBase.getData().add(new XYChart.Data<>(time, 8 + measure.getAlpha()));
+            seriesBetaLowBase.getData().add(new XYChart.Data<>(time, 2 + measure.getBetaLow()));
+            seriesBetaHighBase.getData().add(new XYChart.Data<>(time, 4 + measure.getBetaHigh()));
+            seriesGammaBase.getData().add(new XYChart.Data<>(time, 6 + measure.getGamma()));
+            seriesThetaBase.getData().add(new XYChart.Data<>(time, 8 + measure.getTheta()));
         }
 
         chartMainMusic.getYAxis().setTickLabelsVisible(false);

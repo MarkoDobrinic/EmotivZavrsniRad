@@ -1,5 +1,7 @@
 package helper;
 
+import java.util.SimpleTimeZone;
+
 /**
  * Created by RedShift on 1.9.2016..
  */
@@ -34,6 +36,11 @@ public class Constants {
                     "ON TEST.BASELINE_ID = BASELINE.ID JOIN USER " +
                     "ON BASELINE.USER_ID = USER.ID " +
                     "WHERE USER.ID = ?";
+
+            public static final String DELETE_TEST = "DELETE FROM TEST WHERE ID = ?";
+
+            public static final String DELETE_USER = "DELETE FROM USER WHERE USERNAME = ?";
+
         }
 
         public class Baseline {
@@ -79,14 +86,19 @@ public class Constants {
             public static final String GENRE = "GENRE";
             public static final String SONGNAME = "SONGNAME";
             public static final String ARTIST = "ARTIST";
+            public static final String SONGDURATION = "SONGDURATION";
             /***
              * CREATE USER
              */
             public static final String INSERT_TEST = "INSERT INTO TEST (" +
-                    BASELINE_ID + ", " + DESCRIPTION + ", " + GENRE + ", " + SONGNAME +
-                    ", " + ARTIST + " )" + "VALUES (?,?,?,?,?)";
+                    BASELINE_ID + ", " + DESCRIPTION + ", " + GENRE + ", " + SONGNAME + ", " + SONGDURATION +
+                    ", " + ARTIST + " )" + "VALUES (?,?,?,?,?,?)";
 
-            public static final String FIND_TEST_BY_BASELINE= "SELECT * FROM TEST WHERE " + BASELINE_ID + "= ?;";
+            public static final String FIND_TEST_BY_BASELINE= "SELECT * FROM TEST WHERE " + BASELINE_ID + "= ? ORDER BY ID DESC;";
+
+            public static final String FIND_LAST_TEST = "SELECT MAX(ID) as ID FROM TEST;";
+
+            public static final String FIND_TEST_BY_ID= "SELECT * FROM TEST WHERE " + ID + "= ?;";
         }
 
         public class TestMeasure {
@@ -105,6 +117,23 @@ public class Constants {
                     BASELINE_ID + ", " + NODE_ID + ", " + TEST_ID + ", " + ALPHA +
                     ", " + BETALOW + ", " + BETAHIGH + ", " + GAMMA + ", " + THETA +
                     ")" + "VALUES (?,?,?,?,?,?,?,?)";
+
+            public static final String FIND_TEST_MEASURE_BY_TEST = "SELECT * FROM TEST_MEASURE WHERE TEST_ID = ?    ";
+
+            public static final String FIND_AVG_ALPHA_BY_NODE = "SELECT AVG(ALPHA) FROM TEST_MEASURE WHERE TEST_ID = ? GROUP BY NODE_ID";
+
+           //public String FIND_AVG_WAVE_BY_TEST_ID = "SELECT AVG(" + WAVE + ") AS avg" + WAVE + " FROM TEST_MEASURE WHERE TEST_ID = ?;";
+
+            public static final String FIND_AVG_ALPHA_BY_TEST_ID = "SELECT AVG(ALPHA) AS avgAlpha FROM TEST_MEASURE WHERE TEST_ID = ?;";
+
+            public static final String FIND_AVG_BETALOW_BY_TEST_ID = "SELECT AVG(BETALOW) AS avgBetaLow FROM TEST_MEASURE WHERE TEST_ID = ?;";
+
+            public static final String FIND_AVG_BETAHIGH_BY_TEST_ID = "SELECT AVG(BETAHIGH) AS avgBetaHigh FROM TEST_MEASURE WHERE TEST_ID = ?;";
+
+            public static final String FIND_AVG_GAMMA_BY_TEST_ID = "SELECT AVG(GAMMA) AS avgGamma FROM TEST_MEASURE WHERE TEST_ID = ?;";
+
+            public static final String FIND_AVG_THETA_BY_TEST_ID = "SELECT AVG(THETA) AS avgTheta FROM TEST_MEASURE WHERE TEST_ID = ?;";
+
         }
     }
 

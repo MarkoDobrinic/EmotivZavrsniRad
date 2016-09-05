@@ -43,17 +43,16 @@ public class BaselineController extends EmotivMusicApp implements ControlledScre
     private Service<Void> dbInsertThread;
     private EmotivBaseline baseline = new EmotivBaseline();
 
+
     @FXML
-    public Label lblTimeCounter;
+    private MenuItem itemAverage, itemSaveBaseline, itemSkip;
 
     @FXML
     public LineChart<Integer, Double> chartBaseline;
 
     @FXML
-    public Button btnMainRestart, btnMainStart, btnBase;
+    public Button btnMainRestart, btnMainStart;
 
-    @FXML
-    public ChoiceBox choiceBoxDifficulty;
 
     @Override
     public void init() {
@@ -61,7 +60,47 @@ public class BaselineController extends EmotivMusicApp implements ControlledScre
     }
 
     @FXML
-    public void onBtnBase(ActionEvent event) {
+    private void onItemSkip(ActionEvent event){
+
+        baseline.setUserId(EmotivContext.LOGGED_USER.getId());
+        baseline = EmotivContext.DAO.saveBasline(baseline);
+        EmotivContext.DAO.saveBaselineReading(allReadings, baseline);
+        EmotivContext.BASELINE = baseline;
+        goToMainScreen();
+    }
+
+    @FXML
+    private void onItemAverage(ActionEvent event){
+
+        seriesAlpha.getData().clear();
+        seriesBetaLow.getData().clear();
+        seriesBetaHigh.getData().clear();
+        seriesGamma.getData().clear();
+        seriesTheta.getData().clear();
+
+
+        System.out.println("Size: " + allReadings.size());
+
+        Double avgAlpha = allReadings.stream().mapToDouble(EmotivData::getAlpha).summaryStatistics().getAverage();
+        Double avgBetaLow = allReadings.stream().mapToDouble(EmotivData::getBetaLow).summaryStatistics().getAverage();
+        Double avgBetaHigh = allReadings.stream().mapToDouble(EmotivData::getBetaHigh).summaryStatistics().getAverage();
+        Double avgGamma = allReadings.stream().mapToDouble(EmotivData::getGamma).summaryStatistics().getAverage();
+        Double avgTheta = allReadings.stream().mapToDouble(EmotivData::getTheta).summaryStatistics().getAverage();
+
+        System.out.println("AvgAlpha: " + avgAlpha + ", avgBetaLow: " + avgBetaLow + ", avgBetaHigh: "
+                + avgBetaHigh + ", avgGamma: " + avgGamma + ", avgTheta: " + avgTheta);
+
+        for (int time = 0; time < 120; time++) {
+            seriesAlpha.getData().add(new XYChart.Data<>(time, avgAlpha));
+            seriesBetaLow.getData().add(new XYChart.Data<>(time, 2 + avgBetaLow));
+            seriesBetaHigh.getData().add(new XYChart.Data<>(time, 4 + avgBetaHigh));
+            seriesTheta.getData().add(new XYChart.Data<>(time, 6 + avgGamma));
+            seriesGamma.getData().add(new XYChart.Data<>(time, 8 + avgTheta));
+        }
+    }
+
+    @FXML
+    private void onItemSaveBaseline(ActionEvent event){
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle(" ");
@@ -92,19 +131,13 @@ public class BaselineController extends EmotivMusicApp implements ControlledScre
             };
             dbInsertThread.start();
             dbInsertThread.setOnSucceeded(event1 -> {
-                try {
-                    EmotivContext.APP.primaryStage.setMinHeight(1030);
-                    EmotivContext.APP.primaryStage.setMinWidth(1520);
-                    WindowHelper.centerWindow();
-                    myController.setScreen(EmotivMusicApp.screenMainID);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                goToMainScreen();
             });
         } else {
             //TODO
         }
     }
+
 
 
     @FXML
@@ -140,6 +173,7 @@ public class BaselineController extends EmotivMusicApp implements ControlledScre
 
         deviceReader.setReadLength(120);
         deviceReader.setThreadSleep(0);
+
         deviceReader.setCallback(data -> {
             System.out.println("data received..." + data);
 
@@ -153,6 +187,7 @@ public class BaselineController extends EmotivMusicApp implements ControlledScre
             Double avgTheta = data.stream().mapToDouble(EmotivData::getTheta).summaryStatistics().getAverage();
 
             Platform.runLater(() -> {
+
                         seriesAlpha.getData().add(new XYChart.Data<>(time, avgAlpha));
                         seriesBetaLow.getData().add(new XYChart.Data<>(time, 2 + avgBetaLow));
                         seriesBetaHigh.getData().add(new XYChart.Data<>(time, 4 + avgBetaHigh));
@@ -181,44 +216,22 @@ public class BaselineController extends EmotivMusicApp implements ControlledScre
         }
     }
 
-//
-//    public void init(MainScreenController mainController) {
-//        main = mainController;
-//    }
-
     @Override
     public void setScreenParent(ScreensController screenParent) {
         myController = screenParent;
     }
 
 
-    public void calculate(ActionEvent event) {
-
-        seriesAlpha.getData().clear();
-        seriesBetaLow.getData().clear();
-        seriesBetaHigh.getData().clear();
-        seriesGamma.getData().clear();
-        seriesTheta.getData().clear();
-
-
-        System.out.println("Size: " + allReadings.size());
-
-        Double avgAlpha = allReadings.stream().mapToDouble(EmotivData::getAlpha).summaryStatistics().getAverage();
-        Double avgBetaLow = allReadings.stream().mapToDouble(EmotivData::getBetaLow).summaryStatistics().getAverage();
-        Double avgBetaHigh = allReadings.stream().mapToDouble(EmotivData::getBetaHigh).summaryStatistics().getAverage();
-        Double avgGamma = allReadings.stream().mapToDouble(EmotivData::getGamma).summaryStatistics().getAverage();
-        Double avgTheta = allReadings.stream().mapToDouble(EmotivData::getTheta).summaryStatistics().getAverage();
-
-        System.out.println("AvgAlpha: " + avgAlpha + ", avgBetaLow: " + avgBetaLow + ", avgBetaHigh: "
-                + avgBetaHigh + ", avgGamma: " + avgGamma + ", avgTheta: " + avgTheta);
-
-        for (int time = 0; time < 120; time++) {
-            seriesAlpha.getData().add(new XYChart.Data<>(time, avgAlpha));
-            seriesBetaLow.getData().add(new XYChart.Data<>(time, 2 + avgBetaLow));
-            seriesBetaHigh.getData().add(new XYChart.Data<>(time, 4 + avgBetaHigh));
-            seriesTheta.getData().add(new XYChart.Data<>(time, 6 + avgGamma));
-            seriesGamma.getData().add(new XYChart.Data<>(time, 8 + avgTheta));
+    private void goToMainScreen(){
+        try {
+            EmotivContext.APP.primaryStage.setMinHeight(1030);
+            EmotivContext.APP.primaryStage.setMinWidth(1520);
+            WindowHelper.centerWindow();
+            myController.setScreen(EmotivMusicApp.screenMainID);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
+
 }
 

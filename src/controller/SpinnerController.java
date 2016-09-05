@@ -11,7 +11,6 @@ public class SpinnerController implements ControlledScreen {
 
     private int value = 1680;
 
-
     @FXML
     public ProgressIndicator dialogSpinner;
 

@@ -1,5 +1,6 @@
 package dao;
 
+import com.sun.org.apache.regexp.internal.RE;
 import helper.Constants;
 import model.*;
 
@@ -44,6 +45,7 @@ public class EmotivDao {
         return baseline;
     }
 
+    @SuppressWarnings("Duplicates")
     public EmotivTest findTestByBaseline(EmotivBaseline baseline) {
 
         PreparedStatement prepare = prepare(Constants.Database.Test.FIND_TEST_BY_BASELINE, baseline.getId());
@@ -56,12 +58,64 @@ public class EmotivDao {
             test.setDescription(resultSet.getString(Constants.Database.Test.DESCRIPTION));
             test.setGenre(resultSet.getString(Constants.Database.Test.GENRE));
             test.setSongname(resultSet.getString(Constants.Database.Test.SONGNAME));
+            test.setSongDuration(resultSet.getDouble(Constants.Database.Test.SONGDURATION));
             test.setArtist(resultSet.getString(Constants.Database.Test.ARTIST));
             getConnection().commit();
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return test;
+    }
+
+    @SuppressWarnings("Duplicates")
+    public EmotivTest findTestById(Integer id) {
+
+        PreparedStatement prepare = prepare(Constants.Database.Test.FIND_TEST_BY_ID, id);
+        EmotivTest test = new EmotivTest();
+
+        try {
+            ResultSet resultSet = prepare.executeQuery();
+            test.setId(resultSet.getInt(Constants.Database.Test.ID));
+            test.setBaselineId(resultSet.getInt(Constants.Database.Test.BASELINE_ID));
+            test.setDescription(resultSet.getString(Constants.Database.Test.DESCRIPTION));
+            test.setGenre(resultSet.getString(Constants.Database.Test.GENRE));
+            test.setSongname(resultSet.getString(Constants.Database.Test.SONGNAME));
+            test.setSongDuration(resultSet.getDouble(Constants.Database.Test.SONGDURATION));
+            test.setArtist(resultSet.getString(Constants.Database.Test.ARTIST));
+            test.setMeasures(findTestMeasuresByTestId(test.getId()));
+            getConnection().commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return test;
+    }
+
+    public List<EmotivTestMeasure> findTestMeasuresByTestId(Integer id){
+
+        PreparedStatement prepare = prepare(Constants.Database.TestMeasure.FIND_TEST_MEASURE_BY_TEST, id);
+        List<EmotivTestMeasure> measureList = new ArrayList<>();
+
+        try {
+            getConnection().setAutoCommit(false);
+            ResultSet resultSet = prepare.executeQuery();
+            while (resultSet.next()){
+                EmotivTestMeasure measure = new EmotivTestMeasure();
+                measure.setBaselineId(resultSet.getInt(Constants.Database.TestMeasure.BASELINE_ID));
+                measure.setTestId(resultSet.getInt(Constants.Database.TestMeasure.TEST_ID));
+                measure.setNodeId(resultSet.getInt(Constants.Database.TestMeasure.NODE_ID));
+                measure.setAlpha(resultSet.getDouble(Constants.Database.TestMeasure.ALPHA));
+                measure.setBetaLow(resultSet.getDouble(Constants.Database.TestMeasure.BETALOW));
+                measure.setBetaHigh(resultSet.getDouble(Constants.Database.TestMeasure.BETAHIGH));
+                measure.setGamma(resultSet.getDouble(Constants.Database.TestMeasure.GAMMA));
+                measure.setTheta(resultSet.getDouble(Constants.Database.TestMeasure.THETA));
+                measureList.add(measure);
+            }
+            getConnection().commit();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return measureList;
     }
 
     public List<EmotivTest> findTestsByUser(EmotivUser user) {
@@ -79,8 +133,9 @@ public class EmotivDao {
                 test.setDescription(resultSet.getString(Constants.Database.Test.DESCRIPTION));
                 test.setGenre(resultSet.getString(Constants.Database.Test.GENRE));
                 test.setSongname(resultSet.getString(Constants.Database.Test.SONGNAME));
+                test.setSongDuration(resultSet.getDouble(Constants.Database.Test.SONGDURATION));
                 test.setArtist(resultSet.getString(Constants.Database.Test.ARTIST));
-
+                test.setMeasures(findTestMeasuresByTestId(test.getId()));
                 tests.add(test);
             }
             getConnection().commit();
@@ -90,6 +145,70 @@ public class EmotivDao {
         }
         return tests;
     }
+
+    public Double findAvgAlphaByTestId(Integer id){
+        PreparedStatement prepare = prepare(Constants.Database.TestMeasure.FIND_AVG_ALPHA_BY_TEST_ID, id);
+        Double avgWave = 0d;
+        try{
+            ResultSet resultSet = prepare.executeQuery();
+            avgWave = resultSet.getDouble("avgAlpha");
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return avgWave;
+    }
+    public Double findAvgBetaLowByTestId(Integer id){
+        PreparedStatement prepare = prepare(Constants.Database.TestMeasure.FIND_AVG_BETALOW_BY_TEST_ID, id);
+        Double avgWave = 0d;
+        try{
+            ResultSet resultSet = prepare.executeQuery();
+            avgWave = resultSet.getDouble("avgBetaLow");
+            System.out.println(resultSet.getDouble("avgBetaLow"));
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return avgWave;
+    }
+    public Double findAvgBetaHighByTestId(Integer id){
+        PreparedStatement prepare = prepare(Constants.Database.TestMeasure.FIND_AVG_BETAHIGH_BY_TEST_ID, id);
+        Double avgWave = 0d;
+        try{
+            ResultSet resultSet = prepare.executeQuery();
+            avgWave = resultSet.getDouble("avgBetaHigh");
+            System.out.println(resultSet.getDouble("avgBetaHigh"));
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return avgWave;
+    }
+
+    public Double findAvgGammaByTestId(Integer id){
+        PreparedStatement prepare = prepare(Constants.Database.TestMeasure.FIND_AVG_GAMMA_BY_TEST_ID, id);
+        Double avgWave = 0d;
+        try{
+            ResultSet resultSet = prepare.executeQuery();
+            avgWave = resultSet.getDouble("avgGamma");
+            System.out.println(resultSet.getDouble("avgGamma"));
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return avgWave;
+    }
+
+    public Double findAvgThetaByTestId(Integer id){
+        PreparedStatement prepare = prepare(Constants.Database.TestMeasure.FIND_AVG_THETA_BY_TEST_ID, id);
+        Double avgWave = 0d;
+        try{
+            ResultSet resultSet = prepare.executeQuery();
+            avgWave = resultSet.getDouble("avgTheta");
+            System.out.println(resultSet.getDouble("avgTheta"));
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return avgWave;
+    }
+
+
 
     public void saveBaselineReading(List<EmotivData> allReadings, EmotivBaseline baseline) {
         try {
@@ -135,7 +254,7 @@ public class EmotivDao {
     public EmotivTest saveTest(EmotivTest test) {
 
         PreparedStatement prepare = prepare(Constants.Database.Test.INSERT_TEST, test.getBaselineId(),
-                test.getDescription(), test.getGenre(), test.getSongname(), test.getArtist());
+                test.getDescription(), test.getGenre(), test.getSongname(), test.getSongDuration(), test.getArtist());
         try {
             prepare.execute();
             getConnection().commit();
@@ -153,7 +272,7 @@ public class EmotivDao {
 
         PreparedStatement prepare = prepare(Constants.Database.TestMeasure.INSERT_TEST_MEASURE,
                 baseline.getId(), emotivData.getNodeId(), test.getId(), emotivData.getAlpha(), emotivData.getBetaLow(),
-                emotivData.getBetaHigh(), emotivData.getGamma(), emotivData.getTheta());
+                emotivData.getBetaHigh(), emotivData.getGamma(), emotivData.getTheta(), emotivData.getTime());
         try {
             prepare.execute();
         } catch (SQLException e) {
@@ -169,10 +288,23 @@ public class EmotivDao {
                 saveTestReading(test, reading, baseline);
             }
             getConnection().commit();
-            getConnection().setAutoCommit(true);
+            //getConnection().setAutoCommit(true);
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public void saveUser(String username, String password){
+
+        PreparedStatement prepare = prepare(Constants.Database.User.INSERT_USER, username, password);
+        try {
+            prepare.execute();
+            getConnection().commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("User added to database.");
     }
 
     public EmotivBaselineMeasure getAverageMeasure(EmotivBaseline baseline) {
@@ -195,6 +327,45 @@ public class EmotivDao {
         }
 
         return baselineMeasure;
+    }
+
+    public void deleteUser(String username){
+
+        PreparedStatement prepare = prepare(Constants.Database.User.DELETE_USER, username);
+
+        try {
+            prepare.execute();
+            getConnection().commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        System.out.println("User successfully deleted.");
+    }
+
+    public void deleteTest(Integer id){
+
+        PreparedStatement prepare = prepare(Constants.Database.User.DELETE_TEST, id);
+
+        try {
+            prepare.execute();
+            getConnection().commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Test successfully deleted.");
+    }
+
+    public void findLastTest(){
+
+        PreparedStatement prepare = prepare(Constants.Database.Test.FIND_LAST_TEST);
+        try {
+            ResultSet resultSet = prepare.executeQuery();
+            EmotivContext.TEST.setId(resultSet.getInt("ID"));
+            getConnection().commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
     }
 
 

@@ -8,14 +8,25 @@ public class EmotivTestMeasure {
     private int id;
     private int baselineId;
     private int nodeId;
+    private int testId;
+
     private Double alpha;
     private Double betaLow;
     private Double betaHigh;
     private Double gamma;
     private Double theta;
 
+
     public int getId() {
         return id;
+    }
+
+    public int getTestId() {
+        return testId;
+    }
+
+    public void setTestId(int testId) {
+        this.testId = testId;
     }
 
     public void setId(int id) {
@@ -76,5 +87,20 @@ public class EmotivTestMeasure {
 
     public void setTheta(Double theta) {
         this.theta = theta;
+    }
+
+    @Override
+    public String toString() {
+        return "EmotivTestMeasure{" +
+                "id=" + id +
+                ", baselineId=" + baselineId +
+                ", nodeId=" + nodeId +
+                ", testId=" + testId +
+                ", alpha=" + alpha +
+                ", betaLow=" + betaLow +
+                ", betaHigh=" + betaHigh +
+                ", gamma=" + gamma +
+                ", theta=" + theta +
+                '}';
     }
 }

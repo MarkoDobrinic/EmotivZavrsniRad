@@ -12,43 +12,13 @@
 <?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1020.0" prefWidth="1512.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainScreenController">
-    <top>
-        <HBox BorderPane.alignment="CENTER">
-            <children>
-                <MenuBar prefHeight="34.0" prefWidth="1512.0">
-                    <menus>
-                        <Menu fx:id="menuMain" mnemonicParsing="false" onAction="#onMenuMain" text="User Controls">
-                            <items>
-                                <MenuItem mnemonicParsing="false" text="Change User" />
-                                <MenuItem mnemonicParsing="false" text="Save File" />
-                                <MenuItem fx:id="menuShowAnalytics" mnemonicParsing="false" onAction="#onMenuShowAnalytics" text="Show Analytics" />
-                                <MenuItem mnemonicParsing="false" text="Close Application" />
-                            </items>
-                        </Menu>
-                        <Menu mnemonicParsing="false" text="Emotiv">
-                            <items>
-                                <MenuItem mnemonicParsing="false" text="Open device status" />
-                            </items>
-                        </Menu>
-                        <Menu mnemonicParsing="false" text="Help">
-                            <items>
-                                <MenuItem mnemonicParsing="false" text="About" />
-                            </items>
-                        </Menu>
-                    </menus>
-                </MenuBar>
-                <ImageView fitHeight="34.0" fitWidth="71.0" pickOnBounds="true" preserveRatio="true" />
-                <ImageView fitHeight="34.0" fitWidth="61.0" pickOnBounds="true" preserveRatio="true" />
-            </children>
-        </HBox>
-    </top>
+<BorderPane maxHeight="921.0" maxWidth="1462.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="921.0" prefWidth="1462.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainScreenController">
     <center>
         <Pane prefHeight="719.0" prefWidth="1005.0" BorderPane.alignment="CENTER">
             <children>
@@ -57,31 +27,38 @@
                         <NumberAxis side="BOTTOM" tickLabelGap="5" tickUnit="10.0" />
                     </xAxis>
                     <yAxis>
-                        <NumberAxis autoRanging="false" side="LEFT" upperBound="10" />
+                        <NumberAxis autoRanging="false" side="LEFT" tickUnit="2.0" upperBound="10" />
                     </yAxis>
                 </LineChart>
-                <ProgressBar layoutX="107.0" layoutY="677.0" prefHeight="23.0" prefWidth="755.0" progress="0.0" />
-                <ChoiceBox fx:id="cbTest" layoutX="107.0" layoutY="740.0" prefWidth="150.0" />
+                <ProgressBar layoutX="117.0" layoutY="663.0" prefHeight="23.0" prefWidth="755.0" progress="0.0" />
+                <ChoiceBox fx:id="cbTest" layoutX="722.0" layoutY="707.0" prefWidth="150.0" />
+                <ImageView fitHeight="55.0" fitWidth="35.0" layoutX="907.0" layoutY="-3.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../documents/resources/battery_small.png" />
+               </image></ImageView>
+                <ImageView fitHeight="34.0" fitWidth="61.0" layoutX="957.0" layoutY="-3.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../documents/resources/signal_small.png" />
+               </image></ImageView>
             </children>
         </Pane>
     </center>
     <bottom>
-        <Pane prefHeight="136.0" prefWidth="1512.0" BorderPane.alignment="CENTER">
+        <Pane prefHeight="84.0" prefWidth="1462.0" BorderPane.alignment="CENTER">
             <children>
-                <Button fx:id="btnSaveTest" layoutX="856.0" layoutY="14.0" mnemonicParsing="false" onAction="#onBtnSaveTest" prefHeight="46.0" prefWidth="162.0" text="Save test" />
-                <ButtonBar layoutX="756.0" layoutY="48.0" prefHeight="40.0" prefWidth="200.0" />
-                <Button fx:id="btnResetTest" layoutX="1018.0" layoutY="14.0" mnemonicParsing="false" onAction="#onBtnResetTest" prefHeight="46.0" prefWidth="159.0" text="Reset" />
+                <Button fx:id="btnSaveTest" layoutX="1137.0" layoutY="19.0" mnemonicParsing="false" onAction="#onBtnSaveTest" prefHeight="46.0" prefWidth="162.0" text="Save test" />
+                <Button fx:id="btnResetTest" layoutX="978.0" layoutY="19.0" mnemonicParsing="false" onAction="#onBtnResetTest" prefHeight="46.0" prefWidth="159.0" text="Reset" />
             </children>
         </Pane>
     </bottom>
     <left>
-        <AnchorPane prefHeight="811.0" prefWidth="435.0" BorderPane.alignment="CENTER">
+        <AnchorPane prefHeight="798.0" prefWidth="435.0" BorderPane.alignment="CENTER">
             <children>
                 <Pane prefHeight="252.0" prefWidth="435.0">
                     <children>
-                        <Label alignment="CENTER" layoutX="2.0" layoutY="76.0" prefHeight="21.0" prefWidth="432.0" text="Song picker" />
-                        <Button fx:id="btnOpenFile" layoutX="133.0" layoutY="126.0" mnemonicParsing="false" onAction="#onBtnOpenFile" prefHeight="31.0" prefWidth="161.0" text="Open File" />
-                        <ButtonBar fx:id="playerControls" layoutX="114.0" layoutY="166.0" prefHeight="64.0" prefWidth="168.0">
+                        <Label alignment="CENTER" layoutX="2.0" layoutY="49.0" prefHeight="21.0" prefWidth="432.0" text="Song picker" />
+                        <Button fx:id="btnOpenFile" layoutX="133.0" layoutY="99.0" mnemonicParsing="false" onAction="#onBtnOpenFile" prefHeight="31.0" prefWidth="161.0" text="Open File" />
+                        <ButtonBar fx:id="playerControls" layoutX="114.0" layoutY="139.0" prefHeight="64.0" prefWidth="168.0">
                             <buttons>
                                 <Button fx:id="btnPlayerStart" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onBtnPlayerStart" prefHeight="64.0" prefWidth="64.0" text="start" />
                                 <Button fx:id="btnPlayerStop" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onBtnPlayerStop" prefHeight="64.0" prefWidth="64.0" text="stop" />
@@ -89,12 +66,38 @@
                         </ButtonBar>
                     </children>
                 </Pane>
-                <ChoiceBox fx:id="cbGenre" layoutX="100.0" layoutY="516.0" prefHeight="31.0" prefWidth="236.0" />
+                <ChoiceBox fx:id="cbGenre" layoutX="90.0" layoutY="560.0" prefHeight="31.0" prefWidth="236.0" />
                 <TextField fx:id="tfArtist" layoutX="100.0" layoutY="299.0" prefHeight="31.0" prefWidth="234.0" />
                 <Label alignment="CENTER" layoutX="65.0" layoutY="261.0" prefHeight="21.0" prefWidth="307.0" text="Artist" />
-                <Button fx:id="btnSaveSongInfo" layoutX="100.0" layoutY="590.0" mnemonicParsing="false" onAction="#onBtnSaveSongInfo" prefHeight="31.0" prefWidth="113.0" text="Save Info" />
-                <TextArea fx:id="txtDescription" layoutX="101.0" layoutY="362.0" prefHeight="127.0" prefWidth="234.0" />
+                <Button fx:id="btnSaveSongInfo" layoutX="161.0" layoutY="625.0" mnemonicParsing="false" onAction="#onBtnSaveSongInfo" prefHeight="31.0" prefWidth="113.0" text="Save Info" />
+                <TextArea fx:id="txtDescription" layoutX="102.0" layoutY="381.0" prefHeight="127.0" prefWidth="234.0" />
+            <Label alignment="CENTER" layoutX="103.0" layoutY="349.0" prefHeight="21.0" prefWidth="232.0" text="Description" />
+            <Label alignment="CENTER" layoutX="130.0" layoutY="532.0" prefHeight="21.0" prefWidth="156.0" text="Genre" />
             </children>
         </AnchorPane>
     </left>
+   <top>
+          <MenuBar prefHeight="34.0" prefWidth="1513.0" BorderPane.alignment="CENTER">
+              <menus>
+                  <Menu fx:id="menuMain" mnemonicParsing="false" onAction="#onMenuMain" text="User Controls">
+                      <items>
+                          <MenuItem mnemonicParsing="false" text="Change User" />
+                          <MenuItem mnemonicParsing="false" text="Save File" />
+                          <MenuItem fx:id="menuShowAnalytics" mnemonicParsing="false" onAction="#onMenuShowAnalytics" text="Show Analytics" />
+                          <MenuItem mnemonicParsing="false" text="Close Application" />
+                      </items>
+                  </Menu>
+                  <Menu mnemonicParsing="false" text="Emotiv">
+                      <items>
+                          <MenuItem mnemonicParsing="false" text="Open device status" />
+                      </items>
+                  </Menu>
+                  <Menu mnemonicParsing="false" text="Help">
+                      <items>
+                          <MenuItem mnemonicParsing="false" text="About" />
+                      </items>
+                  </Menu>
+              </menus>
+          </MenuBar>
+   </top>
 </BorderPane>
