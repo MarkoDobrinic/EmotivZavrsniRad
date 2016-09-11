@@ -49,7 +49,6 @@ public class MediaPlayerService extends Service<Void> {
     public void stop() {
         player.stop();
         this.reset();
-
     }
 
     public void setSong(String songPath) {

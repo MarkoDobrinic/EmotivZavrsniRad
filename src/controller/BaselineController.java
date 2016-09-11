@@ -43,6 +43,7 @@ public class BaselineController extends EmotivMusicApp implements ControlledScre
     private Service<Void> dbInsertThread;
     private EmotivBaseline baseline = new EmotivBaseline();
 
+    
 
     @FXML
     private MenuItem itemAverage, itemSaveBaseline, itemSkip;
@@ -144,12 +145,6 @@ public class BaselineController extends EmotivMusicApp implements ControlledScre
 
     @FXML
     public void onBtnMainStart(ActionEvent event) {
-        //TODO - method that fills line chart dynamically with random numbers
-//        XYChart.Series<String, Integer> series = new XYChart.Series<String, Integer>();
-//        series.getData().addAll(new XYChart.Data<String, Integer>("Jan", 250));
-//        series.getData().addAll(new XYChart.Data<String, Integer>("Feb", 123));
-//        series.getData().addAll(new XYChart.Data<String, Integer>("Mar", 441));
-        //series.getData().addAll(new XYChart.Data<Integer, Double>(120, 2.23));
 
         chartBaseline.setCreateSymbols(false);
         chartBaseline.setTitle("Test Baseline");

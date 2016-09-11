@@ -106,7 +106,7 @@ public class MainScreenController extends Window implements ControlledScreen {
         EmotivContext.APP.primaryStage.setHeight(735);
         EmotivContext.APP.primaryStage.setWidth(1461);
         WindowHelper.centerWindow();
-        myController.setScreen(EmotivMusicApp.screenAnalyticsID);
+        myController.setScreen(EmotivMusicApp.screenEmotivStatusID);
     }
 
     @FXML
@@ -271,8 +271,6 @@ public class MainScreenController extends Window implements ControlledScreen {
 
         mainTheta.setName("Theta");
         chartMainMusic.getData().add(mainTheta);
-
-        //TODO - pokretanje threada za dinamične podatke
 
         //čistimo listu prije novog ubacivanja
         //allReadings.clear();

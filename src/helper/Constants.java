@@ -46,14 +46,11 @@ public class Constants {
         public class Baseline {
             public static final String ID = "ID";
             public static final String USER_ID = "USER_ID";
-            /***
-             * CREATE USER
-             */
+
             public static final String INSERT_BASELINE_BY_USER = "INSERT INTO BASELINE (" + USER_ID + ")" +
                     "VALUES (?);";
 
             public static final String FIND_BASELINE_BY_USER = "SELECT * FROM BASELINE WHERE " + USER_ID + "= ?;";
-
 
         }
 
@@ -65,9 +62,7 @@ public class Constants {
             public static final String BETAHIGH = "BETAHIGH";
             public static final String GAMMA = "GAMMA";
             public static final String THETA = "THETA";
-            /***
-             * CREATE USER
-             */
+
             public static final String INSERT_BASELINE_MEASURE = "INSERT INTO BASELINE_MEASURE (" +
                     BASELINE_ID + ", " + NODE_ID + ", " + ALPHA +
                     ", " + BETALOW + ", " + BETAHIGH + ", " +
@@ -87,9 +82,7 @@ public class Constants {
             public static final String SONGNAME = "SONGNAME";
             public static final String ARTIST = "ARTIST";
             public static final String SONGDURATION = "SONGDURATION";
-            /***
-             * CREATE USER
-             */
+
             public static final String INSERT_TEST = "INSERT INTO TEST (" +
                     BASELINE_ID + ", " + DESCRIPTION + ", " + GENRE + ", " + SONGNAME + ", " + SONGDURATION +
                     ", " + ARTIST + " )" + "VALUES (?,?,?,?,?,?)";
@@ -111,9 +104,7 @@ public class Constants {
             public static final String GAMMA = "GAMMA";
             public static final String THETA = "THETA";
             public static final String TIME = "TIME";
-            /***
-             * CREATE USER
-             */
+
             public static final String INSERT_TEST_MEASURE = "INSERT INTO TEST_MEASURE (" +
                     BASELINE_ID + ", " + NODE_ID + ", " + TEST_ID + ", " + ALPHA +
                     ", " + BETALOW + ", " + BETAHIGH + ", " + GAMMA + ", " + THETA + ", " + TIME +

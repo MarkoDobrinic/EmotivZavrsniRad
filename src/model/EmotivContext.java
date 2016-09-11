@@ -14,10 +14,7 @@ public final class EmotivContext {
     public static EmotivBaseline BASELINE;
     public static EmotivTest TEST;
 
-//todo emotiv test objekt???
 
     private EmotivContext() {
     }
-
-
 }
