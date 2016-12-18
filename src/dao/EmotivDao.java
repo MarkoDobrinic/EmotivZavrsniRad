@@ -17,18 +17,6 @@ public class EmotivDao {
     public EmotivUser findUserByUsername(String username) throws SQLException{
         EmotivUser user = null;
         PreparedStatement prepare = prepare(Constants.Database.User.FIND_USER_BY_NAME, username);
-//        try {
-//            ResultSet resultSet = prepare.executeQuery();
-//            user.setId(resultSet.getInt(Constants.Database.User.ID));
-//            user.setUsername(resultSet.getString(Constants.Database.User.USERNAME));
-//            user.setPassword(resultSet.getString(Constants.Database.User.PASSWORD));
-//            System.out.println("User: "+ user.getUsername() + ", " + user.getId());
-//
-//            getConnection().commit();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        return user;
 
         try(ResultSet resultSet = prepare.executeQuery()){
             if (resultSet.next()) {

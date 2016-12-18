@@ -12,16 +12,17 @@ import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
+import javafx.scene.chart.ValueAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import model.EmotivBaseline;
 import model.EmotivContext;
 import model.EmotivData;
-import thread.DeviceReader;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by RedShift on 26.8.2016..
@@ -44,7 +45,6 @@ public class BaselineController extends EmotivMusicApp implements ControlledScre
      * Thread variables
      */
     private Thread thread = null;
-    private DeviceReader deviceReader = new DeviceReader();
     public List<EmotivData> allReadings = new ArrayList<>();
     private Service<Void> dbInsertThread;
     private EmotivBaseline baseline = new EmotivBaseline();
@@ -66,6 +66,9 @@ public class BaselineController extends EmotivMusicApp implements ControlledScre
     @FXML
     public Button btnMainRestart, btnMainStart;
 
+    @FXML
+    public Label lblCollectingStatus;
+
 
     @Override
     public void init() {
@@ -80,14 +83,18 @@ public class BaselineController extends EmotivMusicApp implements ControlledScre
         } else {
             btnMainStart.setDisable(false);
         }
+
+        ((ValueAxis) chartBaseline.getXAxis()).setUpperBound(120 * EmotivContext.TIMELINE_SCALE);
     }
 
     @FXML
     private void onItemSkip(ActionEvent event){
 
         baseline.setUserId(EmotivContext.LOGGED_USER.getId());
+        // TODO Load last baseline for user
         baseline = EmotivContext.DAO.saveBasline(baseline);
         EmotivContext.DAO.saveBaselineReading(allReadings, baseline);
+
         EmotivContext.BASELINE = baseline;
         goToMainScreen();
     }
@@ -123,10 +130,10 @@ public class BaselineController extends EmotivMusicApp implements ControlledScre
 
         for (int time = 0; time < 120; time++) {
             seriesAlpha.getData().add(new XYChart.Data<>(time, avgAlpha));
-            seriesBetaLow.getData().add(new XYChart.Data<>(time, 2 + avgBetaLow));
-            seriesBetaHigh.getData().add(new XYChart.Data<>(time, 4 + avgBetaHigh));
-            seriesGamma.getData().add(new XYChart.Data<>(time, 6 + avgGamma));
-            seriesTheta.getData().add(new XYChart.Data<>(time, 8 + avgTheta));
+            seriesBetaLow.getData().add(new XYChart.Data<>(time, 1 * EmotivContext.TIMELINE_MAX_CAP + avgBetaLow));
+            seriesBetaHigh.getData().add(new XYChart.Data<>(time, 2 * EmotivContext.TIMELINE_MAX_CAP + avgBetaHigh));
+            seriesGamma.getData().add(new XYChart.Data<>(time, 3 * EmotivContext.TIMELINE_MAX_CAP + avgGamma));
+            seriesTheta.getData().add(new XYChart.Data<>(time, 4 * EmotivContext.TIMELINE_MAX_CAP + avgTheta));
         }
     }
 
@@ -193,10 +200,8 @@ public class BaselineController extends EmotivMusicApp implements ControlledScre
         //čistimo listu prije novog ubacivanja
         allReadings.clear();
 
-        //deviceReader.setReadLength(120);
-        //deviceReader.setThreadSleep(1000);
 
-        deviceReader.setCallback(data -> {
+        EmotivContext.DEVICE_READER_SERVICE.startCollecting(data -> {
             System.out.println("data received..." + data);
 
             allReadings.addAll(data);
@@ -210,31 +215,48 @@ public class BaselineController extends EmotivMusicApp implements ControlledScre
 
             Platform.runLater(() -> {
                         seriesAlpha.getData().add(new XYChart.Data<>(time, avgAlpha));
-                seriesBetaLow.getData().add(new XYChart.Data<>(time, avgBetaLow));
-                seriesBetaHigh.getData().add(new XYChart.Data<>(time, avgBetaHigh));
-                seriesGamma.getData().add(new XYChart.Data<>(time, avgGamma));
-                seriesTheta.getData().add(new XYChart.Data<>(time, avgTheta));
+                        seriesBetaLow.getData().add(new XYChart.Data<>(time, 1 * EmotivContext.TIMELINE_MAX_CAP + avgBetaLow));
+                        seriesBetaHigh.getData().add(new XYChart.Data<>(time, 2 * EmotivContext.TIMELINE_MAX_CAP + avgBetaHigh));
+                        seriesGamma.getData().add(new XYChart.Data<>(time, 3 * EmotivContext.TIMELINE_MAX_CAP + avgGamma));
+                        seriesTheta.getData().add(new XYChart.Data<>(time, 4 * EmotivContext.TIMELINE_MAX_CAP + avgTheta));
                     }
             );
 
         });
-        Thread thread = new Thread(deviceReader);
-        thread.start();
+
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                System.out.println("Stopped collecting");
+                EmotivContext.DEVICE_READER_SERVICE.stopCollecting();
+                Platform.runLater(() -> lblCollectingStatus.setText("false"));
+            }
+        }, 2 * 60 * 1000);
     }
 
 
     @FXML
     public void onBtnMainReset(ActionEvent event) {
 
-        this.deviceReader.shutdown();
+        EmotivContext.DEVICE_READER_SERVICE.stopCollecting();
 
         try {
             chartBaseline.getData().clear();
+            seriesAlpha.getData().clear();
+            seriesBetaLow.getData().clear();
+            seriesBetaHigh.getData().clear();
+            seriesGamma.getData().clear();
+            seriesTheta.getData().clear();
         } catch (NullPointerException npe) {
             System.out.println("lineChart=" + chartBaseline);
             System.out.println("lineChart.getData()=" + chartBaseline.getData());
             throw npe;
         }
+    }
+
+    @FXML
+    public void onBtnMainStop(ActionEvent event) {
+        EmotivContext.DEVICE_READER_SERVICE.stopCollecting();
     }
 
     @Override

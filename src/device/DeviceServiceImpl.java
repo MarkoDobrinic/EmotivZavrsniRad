@@ -21,7 +21,6 @@ import java.util.List;
 //real implementation
 public class DeviceServiceImpl implements DeviceService {
 
-    private BaselineController baselineController;
     private DoubleByReference alpha = new DoubleByReference(0);
     private DoubleByReference low_beta = new DoubleByReference(0);
     private DoubleByReference high_beta = new DoubleByReference(0);

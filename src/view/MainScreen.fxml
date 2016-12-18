@@ -26,7 +26,8 @@
                         <NumberAxis side="BOTTOM" tickLabelGap="5" tickUnit="10.0" />
                     </xAxis>
                     <yAxis>
-                        <NumberAxis autoRanging="false" side="LEFT" tickLabelsVisible="false" upperBound="10.0" tickUnit="2.0"/>
+                        <NumberAxis autoRanging="false" side="LEFT" tickLabelsVisible="false" upperBound="20.0"
+                                    tickUnit="2.0"/>
                     </yAxis>
                 </LineChart>
                 <ImageView fitHeight="55.0" fitWidth="35.0" layoutX="907.0" layoutY="-3.0" pickOnBounds="true" preserveRatio="true">
