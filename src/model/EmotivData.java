@@ -75,11 +75,15 @@ public class EmotivData {
     @Override
     public String toString() {
         return "EmotivData{" +
-                "alpha=" + alpha +
+                "nodeId=" + nodeId +
                 ", time=" + time +
+                ", alpha=" + alpha +
+                ", betaLow=" + betaLow +
+                ", betaHigh=" + betaHigh +
+                ", gamma=" + gamma +
+                ", theta=" + theta +
                 '}';
     }
-
 }
 
 

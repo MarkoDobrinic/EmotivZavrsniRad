@@ -3,20 +3,25 @@
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<BorderPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.BaselineController">
+<BorderPane prefHeight="600.0" prefWidth="845.0" xmlns="http://javafx.com/javafx/8.0.60"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.BaselineController">
     <center>
         <LineChart fx:id="chartBaseline" prefHeight="412.0" prefWidth="717.0" title="Baseline" BorderPane.alignment="CENTER">
             <xAxis>
-                <NumberAxis autoRanging="false" lowerBound="0" side="BOTTOM" upperBound="120" />
+                <NumberAxis autoRanging="false" lowerBound="0" side="BOTTOM"/>
             </xAxis>
             <yAxis>
-                <NumberAxis autoRanging="false" lowerBound="0" side="LEFT" tickLabelsVisible="false" tickUnit="2.0" upperBound="10" />
+                <NumberAxis autoRanging="false" lowerBound="0" side="LEFT" tickLabelsVisible="false"/>
             </yAxis>
         </LineChart>
     </center>
@@ -46,4 +51,21 @@
         </menus>
       </MenuBar>
    </top>
+    <right>
+        <AnchorPane prefHeight="494.0" prefWidth="143.0" BorderPane.alignment="CENTER">
+            <children>
+                <Text layoutX="14.0" layoutY="63.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Emotiv Status"
+                      wrappingWidth="134.8828125">
+                    <font>
+                        <Font size="24.0"/>
+                    </font>
+                </Text>
+                <Label fx:id="lblStatus" layoutX="14.0" layoutY="104.0" text="null">
+                    <font>
+                        <Font size="18.0"/>
+                    </font>
+                </Label>
+            </children>
+        </AnchorPane>
+    </right>
 </BorderPane>

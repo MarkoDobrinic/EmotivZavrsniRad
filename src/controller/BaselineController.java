@@ -1,6 +1,9 @@
 package controller;
 
+import Iedk.Edk;
+import Iedk.EdkErrorCode;
 import application.EmotivMusicApp;
+import com.sun.jna.Pointer;
 import controller.maincontroller.ControlledScreen;
 import helper.WindowHelper;
 import javafx.application.Platform;
@@ -34,6 +37,9 @@ public class BaselineController extends EmotivMusicApp implements ControlledScre
     public XYChart.Series<Integer, Double> seriesGamma = new XYChart.Series<>();
     public XYChart.Series<Integer, Double> seriesTheta = new XYChart.Series<>();
 
+    public Pointer eEvent = Edk.INSTANCE.IEE_EmoEngineEventCreate();
+    public Pointer eState = Edk.INSTANCE.IEE_EmoStateCreate();
+
     /**
      * Thread variables
      */
@@ -43,6 +49,10 @@ public class BaselineController extends EmotivMusicApp implements ControlledScre
     private Service<Void> dbInsertThread;
     private EmotivBaseline baseline = new EmotivBaseline();
 
+    /***
+     * Emotiv status variables
+     */
+    public boolean emotivStatus = false;
 
     @FXML
     private MenuItem itemAverage, itemSaveBaseline, itemSkip;
@@ -51,12 +61,25 @@ public class BaselineController extends EmotivMusicApp implements ControlledScre
     public LineChart<Integer, Double> chartBaseline;
 
     @FXML
+    public LineChart<Double, Double> testChart;
+
+    @FXML
     public Button btnMainRestart, btnMainStart;
 
 
     @Override
     public void init() {
 
+        if (Edk.INSTANCE.IEE_EngineConnect("Emotiv Systems-5") != EdkErrorCode.EDK_OK
+                .ToInt()) {
+            System.out.println("Emotiv Engine start up failed.");
+
+            emotivStatus = false;
+            btnMainStart.setDisable(true);
+
+        } else {
+            btnMainStart.setDisable(false);
+        }
     }
 
     @FXML
@@ -69,6 +92,7 @@ public class BaselineController extends EmotivMusicApp implements ControlledScre
         goToMainScreen();
     }
 
+
     @FXML
     private void onItemAverage(ActionEvent event){
 
@@ -79,6 +103,11 @@ public class BaselineController extends EmotivMusicApp implements ControlledScre
         seriesTheta.getData().clear();
 
         chartBaseline.setAnimated(false);
+
+        /***
+         * testCHart
+         */
+        testChart.setAnimated(false);
 
 
         System.out.println("Size: " + allReadings.size());
@@ -100,6 +129,7 @@ public class BaselineController extends EmotivMusicApp implements ControlledScre
             seriesTheta.getData().add(new XYChart.Data<>(time, 8 + avgTheta));
         }
     }
+
 
     @FXML
     private void onItemSaveBaseline(ActionEvent event){
@@ -141,16 +171,8 @@ public class BaselineController extends EmotivMusicApp implements ControlledScre
     }
 
 
-
     @FXML
     public void onBtnMainStart(ActionEvent event) {
-        //TODO - method that fills line chart dynamically with random numbers
-//        XYChart.Series<String, Integer> series = new XYChart.Series<String, Integer>();
-//        series.getData().addAll(new XYChart.Data<String, Integer>("Jan", 250));
-//        series.getData().addAll(new XYChart.Data<String, Integer>("Feb", 123));
-//        series.getData().addAll(new XYChart.Data<String, Integer>("Mar", 441));
-        //series.getData().addAll(new XYChart.Data<Integer, Double>(120, 2.23));
-
         chartBaseline.setCreateSymbols(false);
         chartBaseline.setTitle("Test Baseline");
         seriesAlpha.setName("Alpha");
@@ -168,13 +190,11 @@ public class BaselineController extends EmotivMusicApp implements ControlledScre
         seriesTheta.setName("Theta");
         chartBaseline.getData().add(seriesTheta);
 
-        //TODO - pokretanje threada za dinamične podatke
-
         //čistimo listu prije novog ubacivanja
         allReadings.clear();
 
-        deviceReader.setReadLength(120);
-        deviceReader.setThreadSleep(0);
+        //deviceReader.setReadLength(120);
+        //deviceReader.setThreadSleep(1000);
 
         deviceReader.setCallback(data -> {
             System.out.println("data received..." + data);
@@ -189,13 +209,11 @@ public class BaselineController extends EmotivMusicApp implements ControlledScre
             Double avgTheta = data.stream().mapToDouble(EmotivData::getTheta).summaryStatistics().getAverage();
 
             Platform.runLater(() -> {
-
                         seriesAlpha.getData().add(new XYChart.Data<>(time, avgAlpha));
-                        seriesBetaLow.getData().add(new XYChart.Data<>(time, 2 + avgBetaLow));
-                        seriesBetaHigh.getData().add(new XYChart.Data<>(time, 4 + avgBetaHigh));
-                        seriesGamma.getData().add(new XYChart.Data<>(time, 8 + avgGamma));
-                        seriesTheta.getData().add(new XYChart.Data<>(time, 6 + avgTheta));
-
+                seriesBetaLow.getData().add(new XYChart.Data<>(time, avgBetaLow));
+                seriesBetaHigh.getData().add(new XYChart.Data<>(time, avgBetaHigh));
+                seriesGamma.getData().add(new XYChart.Data<>(time, avgGamma));
+                seriesTheta.getData().add(new XYChart.Data<>(time, avgTheta));
                     }
             );
 
@@ -208,7 +226,7 @@ public class BaselineController extends EmotivMusicApp implements ControlledScre
     @FXML
     public void onBtnMainReset(ActionEvent event) {
 
-        this.deviceReader.terminate();
+        this.deviceReader.shutdown();
 
         try {
             chartBaseline.getData().clear();
@@ -235,6 +253,7 @@ public class BaselineController extends EmotivMusicApp implements ControlledScre
             e.printStackTrace();
         }
     }
+
 
 }
 

@@ -106,7 +106,7 @@ public class MainScreenController extends Window implements ControlledScreen {
         EmotivContext.APP.primaryStage.setHeight(735);
         EmotivContext.APP.primaryStage.setWidth(1461);
         WindowHelper.centerWindow();
-        myController.setScreen(EmotivMusicApp.screenAnalyticsID);
+        myController.setScreen(EmotivMusicApp.screenEmotivStatusID);
     }
 
     @FXML
@@ -172,7 +172,7 @@ public class MainScreenController extends Window implements ControlledScreen {
     @FXML
     private void onBtnResetTest(ActionEvent event) {
 
-        this.deviceReader.terminate();
+        this.deviceReader.shutdown();
         try {
             chartMainMusic.getData().clear();
         } catch (NullPointerException npe) {
@@ -202,7 +202,7 @@ public class MainScreenController extends Window implements ControlledScreen {
     public void onBtnPlayerStop() {
 
         mediaPlayerService.stop();
-        deviceReader.terminate();
+        deviceReader.shutdown();
         try {
             chartMainMusic.getData().clear();
             clearAllData();
@@ -277,8 +277,8 @@ public class MainScreenController extends Window implements ControlledScreen {
         //čistimo listu prije novog ubacivanja
         //allReadings.clear();
 
-        deviceReader.setReadLength(mediaPlayerService.getSongDuration().intValue());
-        deviceReader.setThreadSleep(0);
+//        deviceReader.setReadLength(mediaPlayerService.getSongDuration().intValue());
+//        deviceReader.setThreadSleep(500);
 
         deviceReader.setCallback(data -> {
 

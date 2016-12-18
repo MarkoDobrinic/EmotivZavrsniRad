@@ -29,7 +29,7 @@ public class EmotivMusicApp extends Application {
     public static String screenRegisterDeleteID = "registerDelete";
     public static String screenRegisterDeleteFile = "../view/RegisterDeleteScreen.fxml";
     public static String screenEmotivStatusID = "screenEmotivStatus";
-    public static String screenEmotivStatusFile = "view/EmotivStatus.fxml";
+    public static String screenEmotivStatusFile = "../view/EmotivStatus.fxml";
 //    public static String spinnerID = "spinner";
 //    public static String spinnerFile = "../view/Spinner.fxml";
 
@@ -50,7 +50,7 @@ public class EmotivMusicApp extends Application {
         mainContainer.loadScreen(EmotivMusicApp.screenMainID, EmotivMusicApp.screenMainFile);
         mainContainer.loadScreen(EmotivMusicApp.screenAnalyticsID, EmotivMusicApp.screenAnalyticsFile);
         mainContainer.loadScreen(EmotivMusicApp.screenRegisterDeleteID, EmotivMusicApp.screenRegisterDeleteFile);
-        //mainContainer.loadScreen(EmotivMusicApp.screenEmotivStatusID, EmotivMusicApp.screenEmotivStatusFile);
+        mainContainer.loadScreen(EmotivMusicApp.screenEmotivStatusID, EmotivMusicApp.screenEmotivStatusFile);
 
         mainContainer.setScreen(EmotivMusicApp.screenLoginID);
 
