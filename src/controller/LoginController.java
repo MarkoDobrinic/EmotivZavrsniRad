@@ -13,6 +13,7 @@ import model.EmotivContext;
 import model.EmotivUser;
 
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 
@@ -52,6 +53,11 @@ public class LoginController implements Initializable, ControlledScreen {
 
         } else {
             System.out.println("Username or password invalid!");
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Wrong information!");
+            alert.setHeaderText(null);
+            alert.setContentText("Username or password is not valid!");
+            alert.showAndWait();
         }
     }
 
@@ -82,11 +88,17 @@ public class LoginController implements Initializable, ControlledScreen {
     }
 
     private boolean validateUser(EmotivUser user) {
-        EmotivUser userByUsername = EmotivContext.DAO.findUserByUsername(user.getUsername());
+        EmotivUser userByUsername = null;
+        try {
+            userByUsername = EmotivContext.DAO.findUserByUsername(user.getUsername());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         if (userByUsername != null) {
             user.setId(userByUsername.getId());
         }
         return userByUsername != null;
+
     }
 
 //

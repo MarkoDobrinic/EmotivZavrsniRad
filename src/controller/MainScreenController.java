@@ -272,8 +272,6 @@ public class MainScreenController extends Window implements ControlledScreen {
         mainTheta.setName("Theta");
         chartMainMusic.getData().add(mainTheta);
 
-        //TODO - pokretanje threada za dinamične podatke
-
         //čistimo listu prije novog ubacivanja
         //allReadings.clear();
 
