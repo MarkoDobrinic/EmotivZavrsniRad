@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<<<<<<< HEAD
 <module type="JAVA_MODULE" version="4">
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
@@ -29,3 +30,6 @@
     </orderEntry>
   </component>
 </module>
+=======
+<module classpath="eclipse" classpath-dir="$MODULE_DIR$" type="JAVA_MODULE" version="4" />
+>>>>>>> 21d6ca76547543c972a552d40cff2dc8c1923ad0

@@ -11,6 +11,7 @@ import javafx.scene.control.*;
 import model.EmotivBaseline;
 import model.EmotivContext;
 import model.EmotivUser;
+import service.impl.EmotivDeviceReaderServiceImpl;
 
 import java.net.URL;
 import java.sql.SQLException;
@@ -43,13 +44,17 @@ public class LoginController implements Initializable, ControlledScreen {
         user.setPassword(tfPassword.getText());
 
         if (validateUser(user)) {
-
             EmotivContext.LOGGED_USER = user;
 
             EmotivContext.APP.primaryStage.setMinHeight(800);
             EmotivContext.APP.primaryStage.setMinWidth(900);
             WindowHelper.centerWindow();
             myController.setScreen(EmotivMusicApp.screenBaselineID);
+
+            EmotivContext.DEVICE_READER_SERVICE = new EmotivDeviceReaderServiceImpl();
+            // Run DeviceStatusService
+
+            new Thread(EmotivContext.DEVICE_READER_SERVICE).start();
 
         } else {
             System.out.println("Username or password invalid!");
@@ -63,8 +68,6 @@ public class LoginController implements Initializable, ControlledScreen {
 
     @FXML
     private void onItemRegisterDelete(){
-
-
         EmotivContext.APP.primaryStage.setHeight(650);
         EmotivContext.APP.primaryStage.setMaxWidth(347);
         WindowHelper.centerWindow();

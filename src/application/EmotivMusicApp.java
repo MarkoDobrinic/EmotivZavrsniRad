@@ -68,4 +68,8 @@ public class EmotivMusicApp extends Application {
         launch(args);
     }
 
+    @Override
+    public void stop() throws Exception {
+        EmotivContext.DEVICE_READER_SERVICE.shutdown();
+    }
 }

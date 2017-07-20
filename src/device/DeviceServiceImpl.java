@@ -2,13 +2,25 @@ package device;
 
 import Iedk.Edk;
 import Iedk.EdkErrorCode;
+<<<<<<< HEAD
 import com.sun.jna.Pointer;
 import com.sun.jna.ptr.DoubleByReference;
 import com.sun.jna.ptr.IntByReference;
+=======
+import Iedk.EmoState;
+import com.sun.jna.Pointer;
+import com.sun.jna.ptr.DoubleByReference;
+import com.sun.jna.ptr.IntByReference;
+import controller.BaselineController;
+>>>>>>> 21d6ca76547543c972a552d40cff2dc8c1923ad0
 import model.EmotivData;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.ArrayList;
+<<<<<<< HEAD
+=======
+import java.util.Date;
+>>>>>>> 21d6ca76547543c972a552d40cff2dc8c1923ad0
 import java.util.List;
 
 /**
@@ -18,6 +30,7 @@ import java.util.List;
 //real implementation
 public class DeviceServiceImpl implements DeviceService {
 
+<<<<<<< HEAD
     Pointer eEvent = Edk.INSTANCE.IEE_EmoEngineEventCreate();
     Pointer eState = Edk.INSTANCE.IEE_EmoStateCreate();
 
@@ -97,10 +110,38 @@ public class DeviceServiceImpl implements DeviceService {
         return emotivData;
 
         // throw new NotImplementedException();
+=======
+    private DoubleByReference alpha = new DoubleByReference(0);
+    private DoubleByReference low_beta = new DoubleByReference(0);
+    private DoubleByReference high_beta = new DoubleByReference(0);
+    private DoubleByReference gamma = new DoubleByReference(0);
+    private DoubleByReference theta = new DoubleByReference(0);
+
+    @Override
+    public EmotivData readNodeData(int nodeId, int time) {
+        EmotivData emotivData = new EmotivData();
+
+        do {
+            emotivData.setNodeId(nodeId);
+            emotivData.setTime(time);
+
+            emotivData.setAlpha(alpha.getValue());
+            emotivData.setBetaLow(low_beta.getValue());
+            emotivData.setBetaHigh(high_beta.getValue());
+            emotivData.setGamma(gamma.getValue());
+            emotivData.setTheta(theta.getValue());
+
+        }
+        while (EdkErrorCode.EDK_OK.ToInt() != Edk.INSTANCE.IEE_GetAverageBandPowers(0, nodeId, theta, alpha, low_beta, high_beta, gamma));
+
+        return emotivData;
+>>>>>>> 21d6ca76547543c972a552d40cff2dc8c1923ad0
     }
+
 
     @Override
     public List<EmotivData> readData(int time) {
+<<<<<<< HEAD
         List<EmotivData> emotivDataList = new ArrayList<>();
 
         for (int i = 3; i < 17; i++) {
@@ -114,5 +155,14 @@ public class DeviceServiceImpl implements DeviceService {
         System.out.println("Disconnected!");
 
         return emotivDataList;
+=======
+        final List<EmotivData> emotivDataList = new ArrayList<>();
+
+        for (int i = 3; i < 17; i++) {
+            emotivDataList.add(readNodeData(i, time));
+        }
+        return emotivDataList;
+
+>>>>>>> 21d6ca76547543c972a552d40cff2dc8c1923ad0
     }
 }

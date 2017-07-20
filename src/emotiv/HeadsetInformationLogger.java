@@ -68,14 +68,6 @@ public class HeadsetInformationLogger {
                 }
 
                 if (readytocollect && onStateChanged) {
-                    float timestamp = EmoState.INSTANCE.IS_GetTimeFromStart(eState);
-                    System.out.print(timestamp + ", ");
-
-                    System.out.print(EmoState.INSTANCE.IS_GetWirelessSignalStatus(eState)
-                            + ", ");
-
-                    EmoState.INSTANCE.IS_GetBatteryChargeLevel(eState, batteryLevel, maxBatteryLevel);
-                    System.out.print(batteryLevel.getValue() + ", ");
 
                     System.out.print(EmoState.INSTANCE.IS_GetContactQuality(eState,
                             IEE_InputChannels_t.IEE_CHAN_AF3.getType()) + ", ");

@@ -21,6 +21,9 @@ public class AverageBandPowers {
         Pointer eEvent = Edk.INSTANCE.IEE_EmoEngineEventCreate();
         Pointer eState = Edk.INSTANCE.IEE_EmoStateCreate();
 
+        System.out.println("Event: " + eEvent.toString());
+        System.out.println("State: " + eState.toString());
+
         IntByReference userID = null;
         boolean ready = false;
         int state = 0;
@@ -28,6 +31,7 @@ public class AverageBandPowers {
         Edk.IEE_DataChannels_t dataChannel;
 
         userID = new IntByReference(0);
+        System.out.println("Init user id: " + userID.getValue());
 
         if (Edk.INSTANCE.IEE_EngineConnect("Emotiv Systems-5") != EdkErrorCode.EDK_OK
                 .ToInt()) {
@@ -40,16 +44,19 @@ public class AverageBandPowers {
 
         while (true) {
             state = Edk.INSTANCE.IEE_EngineGetNextEvent(eEvent);
+            System.out.println("State: " + state);
 
             // New event needs to be handled
             if (state == EdkErrorCode.EDK_OK.ToInt()) {
+                System.out.println("State is OK");
+
                 int eventType = Edk.INSTANCE.IEE_EmoEngineEventGetType(eEvent);
                 Edk.INSTANCE.IEE_EmoEngineEventGetUserId(eEvent, userID);
 
                 // Log the EmoState if it has been updated
                 if (eventType == Edk.IEE_Event_t.IEE_UserAdded.ToInt())
                     if (userID != null) {
-                        System.out.println("User added");
+                        System.out.println("User added." + userID.getValue());
                         ready = true;
                     }
             } else if (state != EdkErrorCode.EDK_NO_EVENT.ToInt()) {
@@ -58,6 +65,7 @@ public class AverageBandPowers {
             }
 
             if (ready) {
+                System.out.println("Ready");
 
                 DoubleByReference alpha = new DoubleByReference(0);
                 DoubleByReference low_beta = new DoubleByReference(0);
@@ -81,7 +89,7 @@ public class AverageBandPowers {
                         System.out.print(", ");
                     }
 
-                    System.out.println();
+//                    System.out.println();
                 }
             }
         }
