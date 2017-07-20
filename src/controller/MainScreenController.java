@@ -180,6 +180,10 @@ public class MainScreenController extends Window implements ControlledScreen {
             System.out.println("lineChart.getData()=" + chartMainMusic.getData());
             throw npe;
         }
+
+        tfArtist.clear();
+        txtDescription.clear();
+        cbGenre.getSelectionModel().clearSelection();
     }
 
 
@@ -244,7 +248,7 @@ public class MainScreenController extends Window implements ControlledScreen {
         cbGenre.setItems(FXCollections.observableArrayList(
                 "Classical", "Rap/Hip Hop", "Rock", "Pop",
                 "Folk", "Vocal", "Metal", "Ambiental", "Jazz",
-                "Blues", "Electronic"
+                "Blues", "Electronic", "Other"
         ));
 
 //        cbTest.setItems(FXCollections.observableArrayList(

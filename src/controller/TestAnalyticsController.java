@@ -32,12 +32,14 @@ public class TestAnalyticsController implements ControlledScreen {
     private Service<Void> analyticsThread;
     private Service<Void> deleteThread;
 
+    public XYChart.Series<Integer, Double> alphaThetaBase = new XYChart.Series<>();
     public XYChart.Series<Integer, Double> alphaBase = new XYChart.Series<>();
     public XYChart.Series<Integer, Double> betaLowBase = new XYChart.Series<>();
     public XYChart.Series<Integer, Double> betaHighBase = new XYChart.Series<>();
     public XYChart.Series<Integer, Double> gammaBase = new XYChart.Series<>();
     public XYChart.Series<Integer, Double> thetaBase = new XYChart.Series<>();
 
+    public XYChart.Series<Integer, Double> alphaThetaTest = new XYChart.Series<>();
     public XYChart.Series<Integer, Double> alphaTest = new XYChart.Series<>();
     public XYChart.Series<Integer, Double> betaLowTest = new XYChart.Series<>();
     public XYChart.Series<Integer, Double> betaHighTest = new XYChart.Series<>();
@@ -166,8 +168,11 @@ public class TestAnalyticsController implements ControlledScreen {
                 System.out.println("Observable: " + observable.getValue());
                 if (observable.getValue() != null) {
                     Platform.runLater(() -> {
-                        txtTestInfo.setText("Song name: " + observable.getValue().getSongname() + "\n" +
-                                "Artist: " + observable.getValue().getArtist() + "Measures: " + observable.getValue().getMeasures().size());
+                        txtTestInfo.setText(
+                                "Song name: " + observable.getValue().getSongname() + "\n" +
+                                "Artist: " + observable.getValue().getArtist() + "\n" +
+                                "Measures: " + observable.getValue().getMeasures().size() + "\n" +
+                                "Description: " + observable.getValue().getDescription());
                         System.out.println(observable.getValue().toString());
                         EmotivTest test1 = observable.getValue();
                         System.out.println("passing test.. " + test1.toString());
@@ -249,6 +254,17 @@ public class TestAnalyticsController implements ControlledScreen {
                     gammaTest.getData().add(new XYChart.Data<>(time, test.getMeasures().get(time).getTheta()));
                 }
                 break;
+
+            case "Alpha / Theta":
+
+                alphaThetaBase.setName("Alpha / Theta Baseline");
+                alphaThetaTest.setName("Alpha / Theta Test");
+
+                for (int time = 0; time < songDuration; time++) {
+                    alphaThetaBase.getData().add(new XYChart.Data<>(time, measure.getAlpha() / measure.getTheta()));
+                    alphaThetaTest.getData().add(new XYChart.Data<>(time,(test.getMeasures().get(time).getAlpha()/test.getMeasures().get(time).getTheta())));
+                }
+                break;
             default:
                 break;
         }
@@ -261,7 +277,7 @@ public class TestAnalyticsController implements ControlledScreen {
 
         cbTestMeasure.setItems(FXCollections.observableArrayList(
                 "Baseline / Measured Average", "Base Alpha / Test Alpha", "Base BetaLow / Test BetaLow",
-                "Base BetaHigh / Test BetaHigh", "Base Gamma / Test Gamma", "Base Theta / Test Theta"
+                "Base BetaHigh / Test BetaHigh", "Base Gamma / Test Gamma", "Base Theta / Test Theta", "Alpha / Theta"
         ));
         cbTestMeasure.setValue("Base Alpha / Test Alpha");
 
@@ -312,6 +328,9 @@ public class TestAnalyticsController implements ControlledScreen {
 
         thetaBase.setName("Theta Base");
         chartTest.getData().add(thetaBase);
+
+        alphaThetaBase.setName("Alpha Theta Baseline");
+        chartTest.getData().add(alphaThetaBase);
         /** -----------------------------------------**/
         alphaTest.setName("Alpha test");
         chartTest.getData().add(alphaTest);
@@ -327,6 +346,9 @@ public class TestAnalyticsController implements ControlledScreen {
 
         thetaTest.setName("Theta test");
         chartTest.getData().add(thetaTest);
+
+        alphaThetaTest.setName("Alpha Theta test");
+        chartTest.getData().add(alphaThetaTest);
 
         chartTest.setAnimated(false);
     }

@@ -2,8 +2,15 @@ package service;
 
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
+import javafx.scene.control.Label;
+import javafx.scene.control.LabelBuilder;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by RedShift on 3.9.2016..
@@ -17,6 +24,8 @@ public class MediaPlayerService extends Service<Void> {
     private String songName;
     private int stringPosition;
     public boolean playing ;
+    public static final List<String> SUPPORTED_FILE_EXTENSIONS = Arrays.asList(".mp3", ".m4a");
+    public static final int FILE_EXTENSION_LEN = 3;
     private String songNameSpaces;
 
     @Override
@@ -59,14 +68,23 @@ public class MediaPlayerService extends Service<Void> {
         System.out.println("Playing...");
         pick = new Media(songPath);
         player = new MediaPlayer(pick);
+
         player.setOnReady(new Runnable() {
             @Override
             public void run() {
+                songName = player.getMedia().getSource();
+
                 songDuration = pick.getDuration().toSeconds();
                 stringPosition = pick.getSource().lastIndexOf('/' + 1);
                 songNameSpaces = pick.getSource().substring(stringPosition);
-                songName = songNameSpaces.replaceAll("%", " ");
-                System.out.println("duration" + pick.getDuration().toSeconds());
+
+                songName = songName.substring(0, songName.length() - FILE_EXTENSION_LEN);
+                songName = songName.substring(songName.lastIndexOf("/") + 1).replaceAll("%20", " ");
+
+                System.out.println("SONG NAME: " + songName);
+                System.out.println("_________________________________________");
+                System.out.println("PATH: " + songPath);
+                System.out.println("DURATION: " + songDuration);
             }
         });
     }

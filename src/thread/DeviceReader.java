@@ -1,6 +1,7 @@
 package thread;
 
 import device.DeviceService;
+import device.DeviceServiceImpl;
 import device.DeviceServiceMock;
 
 /**
@@ -10,11 +11,12 @@ public class DeviceReader implements Runnable {
 
     private DataCallback callback;
     private DeviceService deviceService = new DeviceServiceMock();
+    //private DeviceService deviceService = new DeviceServiceImpl();
     private int readLength;
     private int threadSleep;
 
 
-    //private DeviceService deviceService = new DeviceServiceImpl();
+
     private volatile boolean running = true;
 
     public void terminate() {

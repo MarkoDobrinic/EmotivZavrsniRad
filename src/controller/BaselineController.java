@@ -6,7 +6,9 @@ import helper.WindowHelper;
 import javafx.application.Platform;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
@@ -93,7 +95,7 @@ public class BaselineController extends EmotivMusicApp implements ControlledScre
         System.out.println("AvgAlpha: " + avgAlpha + ", avgBetaLow: " + avgBetaLow + ", avgBetaHigh: "
                 + avgBetaHigh + ", avgGamma: " + avgGamma + ", avgTheta: " + avgTheta);
 
-        for (int time = 0; time < 120; time++) {
+        for (int time = 0; time < 120000; time++) {
             seriesAlpha.getData().add(new XYChart.Data<>(time, avgAlpha));
             seriesBetaLow.getData().add(new XYChart.Data<>(time, 2 + avgBetaLow));
             seriesBetaHigh.getData().add(new XYChart.Data<>(time, 4 + avgBetaHigh));
@@ -163,13 +165,15 @@ public class BaselineController extends EmotivMusicApp implements ControlledScre
         seriesTheta.setName("Theta");
         chartBaseline.getData().add(seriesTheta);
 
-        //TODO - pokretanje threada za dinamične podatke
+        /**
+         *         pokretanje threada za dinamične podatke
+         */
 
         //čistimo listu prije novog ubacivanja
         allReadings.clear();
 
-        deviceReader.setReadLength(120);
-        deviceReader.setThreadSleep(0);
+        deviceReader.setReadLength(120000);
+        deviceReader.setThreadSleep(100);
 
         deviceReader.setCallback(data -> {
             System.out.println("data received..." + data);
@@ -190,7 +194,6 @@ public class BaselineController extends EmotivMusicApp implements ControlledScre
                         seriesBetaHigh.getData().add(new XYChart.Data<>(time, 4 + avgBetaHigh));
                         seriesGamma.getData().add(new XYChart.Data<>(time, 8 + avgGamma));
                         seriesTheta.getData().add(new XYChart.Data<>(time, 6 + avgTheta));
-
                     }
             );
 
@@ -198,6 +201,9 @@ public class BaselineController extends EmotivMusicApp implements ControlledScre
         Thread thread = new Thread(deviceReader);
         thread.start();
     }
+
+
+
 
 
     @FXML
