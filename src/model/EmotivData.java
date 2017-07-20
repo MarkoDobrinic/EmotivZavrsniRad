@@ -24,7 +24,7 @@ public class EmotivData {
     }
 
     public Double getAlpha() {
-        return alpha;
+        return getLimited(alpha);
     }
 
     public void setAlpha(Double alpha) {
@@ -32,7 +32,7 @@ public class EmotivData {
     }
 
     public Double getBetaLow() {
-        return betaLow;
+        return getLimited(betaLow);
     }
 
     public void setBetaLow(Double betaLow) {
@@ -40,7 +40,7 @@ public class EmotivData {
     }
 
     public Double getBetaHigh() {
-        return betaHigh;
+        return getLimited(betaHigh);
     }
 
     public void setBetaHigh(Double betaHigh) {
@@ -48,7 +48,7 @@ public class EmotivData {
     }
 
     public Double getGamma() {
-        return gamma;
+        return getLimited(gamma);
     }
 
     public void setGamma(Double gamma) {
@@ -56,7 +56,7 @@ public class EmotivData {
     }
 
     public Double getTheta() {
-        return theta;
+        return getLimited(theta);
     }
 
     public void setTheta(Double theta) {
@@ -71,15 +71,28 @@ public class EmotivData {
         this.time = time;
     }
 
+    private Double getLimited(Double input) {
+        if (input < EmotivContext.TIMELINE_MIN_CAP) {
+            return EmotivContext.TIMELINE_MIN_CAP;
+        }
+        if (input > EmotivContext.TIMELINE_MAX_CAP) {
+            return EmotivContext.TIMELINE_MAX_CAP;
+        }
+        return input;
+    }
 
     @Override
     public String toString() {
         return "EmotivData{" +
-                "alpha=" + alpha +
+                "nodeId=" + nodeId +
                 ", time=" + time +
+                ", alpha=" + alpha +
+                ", betaLow=" + betaLow +
+                ", betaHigh=" + betaHigh +
+                ", gamma=" + gamma +
+                ", theta=" + theta +
                 '}';
     }
-
 }
 
 

@@ -11,7 +11,9 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.chart.Axis;
 import javafx.scene.chart.LineChart;
+import javafx.scene.chart.ValueAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -20,7 +22,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Window;
 import model.*;
 import service.MediaPlayerService;
-import thread.DeviceReader;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -37,7 +38,6 @@ public class MainScreenController extends Window implements ControlledScreen {
     private Group root = new Group();
     private Scene scene = new Scene(root, 500, 200);
     private MediaPlayerService mediaPlayerService;
-    private DeviceReader deviceReader = new DeviceReader();
     private BaselineController baseline;
     private EmotivBaseline emotivBaseline;
     private EmotivData emotivData;
@@ -172,7 +172,7 @@ public class MainScreenController extends Window implements ControlledScreen {
     @FXML
     private void onBtnResetTest(ActionEvent event) {
 
-        this.deviceReader.terminate();
+        EmotivContext.DEVICE_READER_SERVICE.stopCollecting();
         try {
             chartMainMusic.getData().clear();
         } catch (NullPointerException npe) {
@@ -192,6 +192,7 @@ public class MainScreenController extends Window implements ControlledScreen {
 
 
         mediaPlayerService.start();
+        ((ValueAxis) chartMainMusic.getXAxis()).setUpperBound(mediaPlayerService.getSongDuration() * EmotivContext.TIMELINE_SCALE);
         System.out.println(mediaPlayerService.getSongDuration());
         mainReadings.clear();
         plotChart();
@@ -206,7 +207,7 @@ public class MainScreenController extends Window implements ControlledScreen {
     public void onBtnPlayerStop() {
 
         mediaPlayerService.stop();
-        deviceReader.terminate();
+        EmotivContext.DEVICE_READER_SERVICE.stopCollecting();
         try {
             chartMainMusic.getData().clear();
             clearAllData();
@@ -279,10 +280,10 @@ public class MainScreenController extends Window implements ControlledScreen {
         //čistimo listu prije novog ubacivanja
         //allReadings.clear();
 
-        deviceReader.setReadLength(mediaPlayerService.getSongDuration().intValue());
-        deviceReader.setThreadSleep(0);
+//        deviceReader.setReadLength(mediaPlayerService.getSongDuration().intValue());
+//        deviceReader.setThreadSleep(500);
 
-        deviceReader.setCallback(data -> {
+        EmotivContext.DEVICE_READER_SERVICE.startCollecting(data -> {
 
             System.out.println("drawing data" + data);
             mainReadings.addAll(data);
@@ -296,23 +297,21 @@ public class MainScreenController extends Window implements ControlledScreen {
 
             Platform.runLater(() -> {
                         mainAlpha.getData().add(new XYChart.Data<>(time, avgAlpha));
-                        mainBetaLow.getData().add(new XYChart.Data<>(time, 2 + avgBetaLow));
-                        mainBetaHigh.getData().add(new XYChart.Data<>(time, 4 + avgBetaHigh));
-                        mainTheta.getData().add(new XYChart.Data<>(time, 6 + avgGamma));
-                        mainGamma.getData().add(new XYChart.Data<>(time, 8 + avgTheta));
+                mainBetaLow.getData().add(new XYChart.Data<>(time, 1 * EmotivContext.TIMELINE_MAX_CAP + avgBetaLow));
+                mainBetaHigh.getData().add(new XYChart.Data<>(time, 2 * EmotivContext.TIMELINE_MAX_CAP + avgBetaHigh));
+                mainTheta.getData().add(new XYChart.Data<>(time, 3 * EmotivContext.TIMELINE_MAX_CAP + avgGamma));
+                mainGamma.getData().add(new XYChart.Data<>(time, 4 * EmotivContext.TIMELINE_MAX_CAP + avgTheta));
                     }
             );
 
         });
-        Thread thread = new Thread(deviceReader);
-        thread.start();
 
     }
 
     private void plotChart() {
 
-        System.out.println("plotting....");
         EmotivBaselineMeasure measure = EmotivContext.DAO.getAverageMeasure(EmotivContext.BASELINE);
+        System.out.println("plotting...." + measure.toString());
 
         System.out.println(measure);
         seriesAlphaBase.getData().clear();
@@ -330,14 +329,13 @@ public class MainScreenController extends Window implements ControlledScreen {
 
         for (int time = 0; time < mediaPlayerService.getSongDuration(); time++) {
             seriesAlphaBase.getData().add(new XYChart.Data<>(time, measure.getAlpha()));
-            seriesBetaLowBase.getData().add(new XYChart.Data<>(time, 2 + measure.getBetaLow()));
-            seriesBetaHighBase.getData().add(new XYChart.Data<>(time, 4 + measure.getBetaHigh()));
-            seriesGammaBase.getData().add(new XYChart.Data<>(time, 6 + measure.getGamma()));
-            seriesThetaBase.getData().add(new XYChart.Data<>(time, 8 + measure.getTheta()));
+            seriesBetaLowBase.getData().add(new XYChart.Data<>(time, 1 * EmotivContext.TIMELINE_MAX_CAP + measure.getBetaLow()));
+            seriesBetaHighBase.getData().add(new XYChart.Data<>(time, 2 * EmotivContext.TIMELINE_MAX_CAP + measure.getBetaHigh()));
+            seriesGammaBase.getData().add(new XYChart.Data<>(time, 3 * EmotivContext.TIMELINE_MAX_CAP + measure.getGamma()));
+            seriesThetaBase.getData().add(new XYChart.Data<>(time, 4 * EmotivContext.TIMELINE_MAX_CAP + measure.getTheta()));
         }
 
         chartMainMusic.getYAxis().setTickLabelsVisible(false);
-
     }
 
     private void clearAllData() {

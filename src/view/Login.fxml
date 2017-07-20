@@ -15,7 +15,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="396.0" maxWidth="600.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="396.0" prefWidth="441.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.LoginController">
+<AnchorPane maxHeight="396.0" maxWidth="600.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="396.0"
+            prefWidth="441.0" xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controller.LoginController">
     <children>
       <VBox alignment="CENTER" layoutY="78.0" prefHeight="396.0" prefWidth="441.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -29,13 +31,13 @@
                </children>
             </HBox>
               <Label prefHeight="32.0" prefWidth="67.0" text="Username" />
-              <TextField fx:id="tfUsername" prefHeight="31.0" prefWidth="250.0" promptText="Username">
+             <TextField fx:id="tfUsername" prefHeight="31.0" prefWidth="250.0" promptText="Username" text="a">
                <VBox.margin>
                   <Insets bottom="15.0" top="15.0" />
                </VBox.margin>
             </TextField>
               <Label text="Password" />
-              <PasswordField fx:id="tfPassword" prefHeight="31.0" prefWidth="250.0" promptText="Password">
+             <PasswordField fx:id="tfPassword" prefHeight="31.0" prefWidth="250.0" promptText="Password" text="a">
                <VBox.margin>
                   <Insets bottom="15.0" top="15.0" />
                </VBox.margin>
