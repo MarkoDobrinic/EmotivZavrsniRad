@@ -24,9 +24,7 @@ import model.*;
 import service.MediaPlayerService;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Created by RedShift on 28.8.2016..
@@ -175,6 +173,9 @@ public class MainScreenController extends Window implements ControlledScreen {
         EmotivContext.DEVICE_READER_SERVICE.stopCollecting();
         try {
             chartMainMusic.getData().clear();
+            tfArtist.clear();
+            txtDescription.clear();
+            cbGenre.getSelectionModel().clearSelection();
         } catch (NullPointerException npe) {
             System.out.println("lineChart=" + chartMainMusic);
             System.out.println("lineChart.getData()=" + chartMainMusic.getData());
@@ -186,9 +187,8 @@ public class MainScreenController extends Window implements ControlledScreen {
     @FXML
     public void onBtnPlayerStart(ActionEvent event) {
 
-
         mediaPlayerService.start();
-        ((ValueAxis) chartMainMusic.getXAxis()).setUpperBound(mediaPlayerService.getSongDuration() * EmotivContext.TIMELINE_SCALE);
+        ((ValueAxis) chartMainMusic.getXAxis()).setUpperBound(mediaPlayerService.getSongDuration() * (EmotivContext.TIMELINE_SCALE));
         System.out.println(mediaPlayerService.getSongDuration());
         mainReadings.clear();
         plotChart();
@@ -245,7 +245,7 @@ public class MainScreenController extends Window implements ControlledScreen {
         cbGenre.setItems(FXCollections.observableArrayList(
                 "Classical", "Rap/Hip Hop", "Rock", "Pop",
                 "Folk", "Vocal", "Metal", "Ambiental", "Jazz",
-                "Blues", "Electronic"
+                "Blues", "Electronic", "Neutral"
         ));
 
 //        cbTest.setItems(FXCollections.observableArrayList(
@@ -256,6 +256,8 @@ public class MainScreenController extends Window implements ControlledScreen {
     }
 
     private void startDrawingData() {
+
+        ((ValueAxis) chartMainMusic.getXAxis()).setUpperBound(mediaPlayerService.getSongDuration() * (EmotivContext.TIMELINE_SCALE));
 
         chartMainMusic.setTitle("Test");
         mainAlpha.setName("Alpha");
@@ -302,9 +304,18 @@ public class MainScreenController extends Window implements ControlledScreen {
 
         });
 
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                System.out.println("Stopped collecting");
+                EmotivContext.DEVICE_READER_SERVICE.stopCollecting();
+            }
+        }, mediaPlayerService.getSongDuration().intValue() * (long)1000);
+
     }
 
     private void plotChart() {
+
 
         EmotivBaselineMeasure measure = EmotivContext.DAO.getAverageMeasure(EmotivContext.BASELINE);
         System.out.println("plotting...." + measure.toString());
@@ -323,7 +334,7 @@ public class MainScreenController extends Window implements ControlledScreen {
         chartMainMusic.getData().add(seriesThetaBase);
 
 
-        for (int time = 0; time < mediaPlayerService.getSongDuration(); time++) {
+        for (int time = 0; time < mediaPlayerService.getSongDuration() * EmotivContext.TIMELINE_SCALE; time++) {
             seriesAlphaBase.getData().add(new XYChart.Data<>(time, measure.getAlpha()));
             seriesBetaLowBase.getData().add(new XYChart.Data<>(time, 1 * EmotivContext.TIMELINE_MAX_CAP + measure.getBetaLow()));
             seriesBetaHighBase.getData().add(new XYChart.Data<>(time, 2 * EmotivContext.TIMELINE_MAX_CAP + measure.getBetaHigh()));

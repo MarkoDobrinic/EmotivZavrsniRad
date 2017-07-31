@@ -13,6 +13,7 @@ import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
+import javafx.scene.chart.ValueAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.util.Callback;
@@ -43,6 +44,8 @@ public class TestAnalyticsController implements ControlledScreen {
     public XYChart.Series<Integer, Double> betaHighTest = new XYChart.Series<>();
     public XYChart.Series<Integer, Double> gammaTest = new XYChart.Series<>();
     public XYChart.Series<Integer, Double> thetaTest = new XYChart.Series<>();
+    public XYChart.Series<Integer, Double> alphaTheta = new XYChart.Series<>();
+
 
 
     @FXML
@@ -166,8 +169,11 @@ public class TestAnalyticsController implements ControlledScreen {
                 System.out.println("Observable: " + observable.getValue());
                 if (observable.getValue() != null) {
                     Platform.runLater(() -> {
-                        txtTestInfo.setText("Song name: " + observable.getValue().getSongname() + "\n" +
-                                "Artist: " + observable.getValue().getArtist() + "Measures: " + observable.getValue().getMeasures().size());
+                        txtTestInfo.setText(
+                                "Song name: " + observable.getValue().getSongname() + "\n" +
+                                "Artist: " + observable.getValue().getArtist() + "\n" +
+                                "Measures: " + observable.getValue().getMeasures().size() + "\n" +
+                                "Description: " + observable.getValue().getDescription());
                         System.out.println(observable.getValue().toString());
                         EmotivTest test1 = observable.getValue();
                         System.out.println("passing test.. " + test1.toString());
@@ -180,7 +186,7 @@ public class TestAnalyticsController implements ControlledScreen {
 
     private void plotChart(EmotivTest test) {
 
-        Integer songDuration = test.getSongDuration().intValue();
+        Integer songDuration = test.getSongDuration().intValue() * EmotivContext.TIMELINE_SCALE;
 
         System.out.println("Total measures: " + test.getMeasures().size());
         EmotivBaselineMeasure measure = EmotivContext.DAO.getAverageMeasure(EmotivContext.BASELINE);
@@ -194,10 +200,10 @@ public class TestAnalyticsController implements ControlledScreen {
         System.out.println("duration: " + test.getSongDuration());
         System.out.println("baseAlpha: " + measure.getAlpha() + ", testAlpha: " + EmotivContext.DAO.findAvgAlphaByTestId(test.getId()));
 
-
         switch (choice) {
 
             case "Base Alpha / Test Alpha":
+
                 alphaBase.setName("Alpha Base");
                 alphaTest.setName("Alpha test");
 
@@ -249,6 +255,17 @@ public class TestAnalyticsController implements ControlledScreen {
                     gammaTest.getData().add(new XYChart.Data<>(time, test.getMeasures().get(time).getTheta()));
                 }
                 break;
+
+            case "Alpha / Theta Training":
+
+                alphaTheta.setName("Alpha / Theta Training");
+
+                for (int time = 0; time < songDuration; time++) {
+                    alphaTheta.getData().add(new XYChart.Data<>(time, test.getMeasures().get(time).getAlpha()/test.getMeasures().get(time).getTheta()));
+//                    alphaTest.getData().add(new XYChart.Data<>(time, test.getMeasures().get(time).getAlpha()));
+//                    thetaTest.getData().add(new XYChart.Data<>(time, test.getMeasures().get(time).getTheta()));
+                }
+                break;
             default:
                 break;
         }
@@ -261,7 +278,7 @@ public class TestAnalyticsController implements ControlledScreen {
 
         cbTestMeasure.setItems(FXCollections.observableArrayList(
                 "Baseline / Measured Average", "Base Alpha / Test Alpha", "Base BetaLow / Test BetaLow",
-                "Base BetaHigh / Test BetaHigh", "Base Gamma / Test Gamma", "Base Theta / Test Theta"
+                "Base BetaHigh / Test BetaHigh", "Base Gamma / Test Gamma", "Base Theta / Test Theta", "Alpha / Theta Training"
         ));
         cbTestMeasure.setValue("Base Alpha / Test Alpha");
 
@@ -272,7 +289,9 @@ public class TestAnalyticsController implements ControlledScreen {
 
                 System.out.println("Old Selected Option: " + oldValue);
                 System.out.println("New Selected Option: " + newValue);
-                Platform.runLater(() -> plotChart(lvTestList.getSelectionModel().getSelectedItems().get(0)));
+                Platform.runLater(() ->
+                        plotChart(lvTestList.getSelectionModel().getSelectedItems().get(0)
+                        ));
             }
         });
 
@@ -292,6 +311,7 @@ public class TestAnalyticsController implements ControlledScreen {
         betaHighTest.getData().clear();
         gammaTest.getData().clear();
         thetaTest.getData().clear();
+        alphaTheta.getData().clear();
 
         //  chartTest.getData().clear();
     }
@@ -327,6 +347,9 @@ public class TestAnalyticsController implements ControlledScreen {
 
         thetaTest.setName("Theta test");
         chartTest.getData().add(thetaTest);
+
+        alphaTheta.setName("Alpha Theta test");
+        chartTest.getData().add(alphaTheta);
 
         chartTest.setAnimated(false);
     }

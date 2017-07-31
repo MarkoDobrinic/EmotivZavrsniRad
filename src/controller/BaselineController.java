@@ -18,6 +18,7 @@ import javafx.scene.control.*;
 import model.EmotivBaseline;
 import model.EmotivContext;
 import model.EmotivData;
+import thread.DeviceReader;
 
 import java.util.*;
 import java.util.concurrent.Executors;
@@ -231,7 +232,7 @@ public class BaselineController extends EmotivMusicApp implements ControlledScre
                 EmotivContext.DEVICE_READER_SERVICE.stopCollecting();
                 Platform.runLater(() -> lblCollectingStatus.setText("false"));
             }
-        }, 2 * 60 * 1000);
+        }, 2 * 60 * (long)1000);
     }
 
 

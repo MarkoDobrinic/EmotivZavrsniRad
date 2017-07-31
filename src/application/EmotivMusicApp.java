@@ -12,6 +12,8 @@ import javafx.stage.Stage;
 import model.EmotivContext;
 import model.EmotivTest;
 
+import java.io.File;
+
 public class EmotivMusicApp extends Application {
 
     public Stage primaryStage;
@@ -35,6 +37,9 @@ public class EmotivMusicApp extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+
+        System.load(System.getProperty("user.dir") + File.separator + "bin" + File.separator + "win64" + File.separator + "edk.dll");
+        System.load(System.getProperty("user.dir") + File.separator + "bin" + File.separator + "win64" + File.separator + "glut64.dll");
 
         EmotivContext.APP = this;
         EmotivContext.DAO = new EmotivDao();
